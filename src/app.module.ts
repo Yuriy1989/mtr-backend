@@ -5,7 +5,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersModule } from './users/users.module';
 import { StoragesModule } from './storages/storages.module';
 import { User } from './users/entities/user.entity';
-import { ObjectsModule } from './objects/objects.module';
 import { MeasuresModule } from './measures/measures.module';
 import { FilialsModule } from './filials/filials.module';
 import { DepartmentsModule } from './departments/departments.module';
@@ -24,7 +23,6 @@ import { DepartmentsModule } from './departments/departments.module';
     }),
     UsersModule,
     StoragesModule,
-    ObjectsModule,
     MeasuresModule,
     FilialsModule,
     DepartmentsModule,
