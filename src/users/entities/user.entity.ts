@@ -23,6 +23,6 @@ export class User {
   @Column()
   email: string;
 
-  @Column()
-  department: string;
+  // @Column()
+  // department: string;
 }

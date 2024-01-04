@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Req, Res } from '@nestjs/common';
+import { Controller, Get, Req, Res } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { AppService } from './app.service';
 
@@ -25,10 +25,4 @@ export class AppController {
   // find(@Param('id') id: string): string {
   //   return `Этот метод вернёт данные пользователя с id ${id}`;
   // }
-
-  @Post()
-  create(@Req() req: Request): string {
-    console.log(req);
-    return 'Это метод для создания нового пользователя';
-  }
 }
