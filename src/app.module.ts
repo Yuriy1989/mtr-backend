@@ -8,6 +8,7 @@ import { User } from './users/entities/user.entity';
 import { MeasuresModule } from './measures/measures.module';
 import { FilialsModule } from './filials/filials.module';
 import { DepartmentsModule } from './departments/departments.module';
+import { Department } from './departments/entities/department.entity';
 
 @Module({
   imports: [
@@ -18,7 +19,7 @@ import { DepartmentsModule } from './departments/departments.module';
       username: 'admin',
       password: 'Qwerty@123',
       database: 'mtr_project',
-      entities: [User],
+      entities: [User, Department],
       synchronize: true,
     }),
     UsersModule,
