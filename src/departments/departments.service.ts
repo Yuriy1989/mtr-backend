@@ -24,8 +24,14 @@ export class DepartmentsService {
     return `This action returns a #${id} department`;
   }
 
-  update(id: number, updateDepartmentDto: UpdateDepartmentDto) {
-    return `This action updates a #${id} department`;
+  async update(updateDepartmentDto: any) {
+    // const department = await this.findOne(id);
+    console.log('updateDepartmentDto', updateDepartmentDto.id);
+    const id = updateDepartmentDto.id;
+    const data = {
+      nameDepartment: updateDepartmentDto.name,
+    };
+    return await this.departmentRepository.update({ id }, data);
   }
 
   remove(id: number) {
