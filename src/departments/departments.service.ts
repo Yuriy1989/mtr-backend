@@ -20,13 +20,7 @@ export class DepartmentsService {
     return await this.departmentRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} department`;
-  }
-
   async update(updateDepartmentDto: any) {
-    // const department = await this.findOne(id);
-    console.log('updateDepartmentDto', updateDepartmentDto.id);
     const id = updateDepartmentDto.id;
     const data = {
       nameDepartment: updateDepartmentDto.name,
@@ -34,7 +28,8 @@ export class DepartmentsService {
     return await this.departmentRepository.update({ id }, data);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} department`;
+  async remove(updateDepartmentDto: any) {
+    const id = updateDepartmentDto[0].id;
+    return await this.departmentRepository.delete(id);
   }
 }

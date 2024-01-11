@@ -25,19 +25,13 @@ export class DepartmentsController {
     return this.departmentsService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.departmentsService.findOne(+id);
-  }
-
   @Patch()
   update(@Body() updateDepartmentDto: UpdateDepartmentDto) {
-    console.log(updateDepartmentDto);
     return this.departmentsService.update(updateDepartmentDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.departmentsService.remove(+id);
+  @Delete()
+  remove(@Body() updateDepartmentDto: UpdateDepartmentDto) {
+    return this.departmentsService.remove(updateDepartmentDto);
   }
 }
