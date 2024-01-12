@@ -1,26 +1,35 @@
 import { Injectable } from '@nestjs/common';
 import { CreateStorageDto } from './dto/create-storage.dto';
 import { UpdateStorageDto } from './dto/update-storage.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Storage } from './entities/storage.entity';
 
 @Injectable()
 export class StoragesService {
-  create(createStorageDto: CreateStorageDto) {
-    return 'This action adds a new storage';
+  constructor(
+    @InjectRepository(Storage)
+    private storageRepository: Repository<Storage>,
+  ) {}
+
+  async create(createStorageDto: CreateStorageDto) {
+    return await this.storageRepository.save(createStorageDto);
   }
 
-  findAll() {
-    return `This action returns all storages`;
+  async findAll() {
+    return await this.storageRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} storage`;
+  async update(updateStorageDto: UpdateStorageDto) {
+    const id = updateStorageDto.id;
+    const data: any = {
+      nameStorage: updateStorageDto.name,
+    };
+    return await this.storageRepository.update({ id }, data);
   }
 
-  update(id: number, updateStorageDto: UpdateStorageDto) {
-    return `This action updates a #${id} storage`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} storage`;
+  async remove(updateStorageDto: UpdateStorageDto) {
+    const id = updateStorageDto[0].id;
+    return await this.storageRepository.delete(id);
   }
 }

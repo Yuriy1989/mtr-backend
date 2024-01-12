@@ -6,5 +6,5 @@ export class Storage {
   id: number;
 
   @Column()
-  name: string;
+  nameStorage: string;
 }

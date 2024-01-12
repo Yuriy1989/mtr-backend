@@ -15,14 +15,4 @@ export class AppController {
   getHelloWorld(): string {
     return this.appService.getHello();
   }
-
-  // @Get()
-  // getAll(): string {
-  //   return 'Этот метод возращает список всех пользователей';
-  // }
-
-  // @Get(':id')
-  // find(@Param('id') id: string): string {
-  //   return `Этот метод вернёт данные пользователя с id ${id}`;
-  // }
 }

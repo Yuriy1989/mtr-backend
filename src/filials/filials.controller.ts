@@ -1,12 +1,4 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-} from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Delete } from '@nestjs/common';
 import { FilialsService } from './filials.service';
 import { CreateFilialDto } from './dto/create-filial.dto';
 import { UpdateFilialDto } from './dto/update-filial.dto';
@@ -25,18 +17,13 @@ export class FilialsController {
     return this.filialsService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.filialsService.findOne(+id);
+  @Patch()
+  update(@Body() updateFilialDto: UpdateFilialDto) {
+    return this.filialsService.update(updateFilialDto);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateFilialDto: UpdateFilialDto) {
-    return this.filialsService.update(+id, updateFilialDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.filialsService.remove(+id);
+  @Delete()
+  remove(@Body() updateFilialDto: UpdateFilialDto) {
+    return this.filialsService.remove(updateFilialDto);
   }
 }

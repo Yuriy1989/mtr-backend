@@ -1,26 +1,35 @@
 import { Injectable } from '@nestjs/common';
 import { CreateFilialDto } from './dto/create-filial.dto';
 import { UpdateFilialDto } from './dto/update-filial.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Filial } from './entities/filial.entity';
 
 @Injectable()
 export class FilialsService {
-  create(createFilialDto: CreateFilialDto) {
-    return 'This action adds a new filial';
+  constructor(
+    @InjectRepository(Filial)
+    private filialRepository: Repository<Filial>,
+  ) {}
+
+  async create(createFilialDto: CreateFilialDto) {
+    return await this.filialRepository.save(createFilialDto);
   }
 
-  findAll() {
-    return `This action returns all filials`;
+  async findAll() {
+    return await this.filialRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} filial`;
+  async update(updateFilialDto: UpdateFilialDto) {
+    const id = updateFilialDto.id;
+    const data: any = {
+      nameFilial: updateFilialDto.name,
+    };
+    return await this.filialRepository.update({ id }, data);
   }
 
-  update(id: number, updateFilialDto: UpdateFilialDto) {
-    return `This action updates a #${id} filial`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} filial`;
+  async remove(updateFilialDto: UpdateFilialDto) {
+    const id = updateFilialDto[0].id;
+    return await this.filialRepository.delete(id);
   }
 }

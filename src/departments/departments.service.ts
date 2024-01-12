@@ -20,15 +20,15 @@ export class DepartmentsService {
     return await this.departmentRepository.find();
   }
 
-  async update(updateDepartmentDto: any) {
+  async update(updateDepartmentDto: UpdateDepartmentDto) {
     const id = updateDepartmentDto.id;
-    const data = {
+    const data: any = {
       nameDepartment: updateDepartmentDto.name,
     };
     return await this.departmentRepository.update({ id }, data);
   }
 
-  async remove(updateDepartmentDto: any) {
+  async remove(updateDepartmentDto: UpdateDepartmentDto) {
     const id = updateDepartmentDto[0].id;
     return await this.departmentRepository.delete(id);
   }

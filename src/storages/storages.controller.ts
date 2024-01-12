@@ -1,12 +1,4 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-} from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Delete } from '@nestjs/common';
 import { StoragesService } from './storages.service';
 import { CreateStorageDto } from './dto/create-storage.dto';
 import { UpdateStorageDto } from './dto/update-storage.dto';
@@ -25,18 +17,13 @@ export class StoragesController {
     return this.storagesService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.storagesService.findOne(+id);
+  @Patch()
+  update(@Body() updateStorageDto: UpdateStorageDto) {
+    return this.storagesService.update(updateStorageDto);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateStorageDto: UpdateStorageDto) {
-    return this.storagesService.update(+id, updateStorageDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.storagesService.remove(+id);
+  @Delete()
+  remove(@Body() updateStorageDto: UpdateStorageDto) {
+    return this.storagesService.remove(updateStorageDto);
   }
 }

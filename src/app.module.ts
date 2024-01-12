@@ -5,10 +5,15 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersModule } from './users/users.module';
 import { StoragesModule } from './storages/storages.module';
 import { User } from './users/entities/user.entity';
-import { MeasuresModule } from './measures/measures.module';
 import { FilialsModule } from './filials/filials.module';
 import { DepartmentsModule } from './departments/departments.module';
 import { Department } from './departments/entities/department.entity';
+import { Filial } from './filials/entities/filial.entity';
+import { Storage } from './storages/entities/storage.entity';
+import { DimensionsModule } from './dimensions/dimensions.module';
+import { RegionsModule } from './regions/regions.module';
+import { ActivitiesModule } from './activities/activities.module';
+import { DeliveriesModule } from './deliveries/deliveries.module';
 
 @Module({
   imports: [
@@ -19,14 +24,17 @@ import { Department } from './departments/entities/department.entity';
       username: 'admin',
       password: 'Qwerty@123',
       database: 'mtr_project',
-      entities: [User, Department],
+      entities: [User, Department, Filial, Storage],
       synchronize: true,
     }),
     UsersModule,
     StoragesModule,
-    MeasuresModule,
     FilialsModule,
     DepartmentsModule,
+    DimensionsModule,
+    RegionsModule,
+    ActivitiesModule,
+    DeliveriesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
