@@ -14,6 +14,10 @@ import { DimensionsModule } from './dimensions/dimensions.module';
 import { RegionsModule } from './regions/regions.module';
 import { ActivitiesModule } from './activities/activities.module';
 import { DeliveriesModule } from './deliveries/deliveries.module';
+import { Region } from './regions/entities/region.entity';
+import { Dimension } from './dimensions/entities/dimension.entity';
+import { Delivery } from './deliveries/entities/delivery.entity';
+import { Activity } from './activities/entities/activity.entity';
 
 @Module({
   imports: [
@@ -24,7 +28,16 @@ import { DeliveriesModule } from './deliveries/deliveries.module';
       username: 'admin',
       password: 'Qwerty@123',
       database: 'mtr_project',
-      entities: [User, Department, Filial, Storage],
+      entities: [
+        User,
+        Department,
+        Filial,
+        Storage,
+        Region,
+        Dimension,
+        Delivery,
+        Activity,
+      ],
       synchronize: true,
     }),
     UsersModule,

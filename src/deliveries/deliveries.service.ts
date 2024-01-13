@@ -1,26 +1,35 @@
 import { Injectable } from '@nestjs/common';
 import { CreateDeliveryDto } from './dto/create-delivery.dto';
 import { UpdateDeliveryDto } from './dto/update-delivery.dto';
+import { Delivery } from './entities/delivery.entity';
+import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class DeliveriesService {
-  create(createDeliveryDto: CreateDeliveryDto) {
-    return 'This action adds a new delivery';
+  constructor(
+    @InjectRepository(Delivery)
+    private deliveryRepository: Repository<Delivery>,
+  ) {}
+
+  async create(createDeliveryDto: CreateDeliveryDto) {
+    return await this.deliveryRepository.save(createDeliveryDto);
   }
 
-  findAll() {
-    return `This action returns all deliveries`;
+  async findAll() {
+    return await this.deliveryRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} delivery`;
+  async update(updateDeliveryDto: UpdateDeliveryDto) {
+    const id = updateDeliveryDto.id;
+    const data: any = {
+      nameDelivery: updateDeliveryDto.name,
+    };
+    return await this.deliveryRepository.update({ id }, data);
   }
 
-  update(id: number, updateDeliveryDto: UpdateDeliveryDto) {
-    return `This action updates a #${id} delivery`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} delivery`;
+  async remove(updateDeliveryDto: UpdateDeliveryDto) {
+    const id = updateDeliveryDto[0].id;
+    return await this.deliveryRepository.delete(id);
   }
 }
