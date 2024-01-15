@@ -27,6 +27,6 @@ export class User {
   @Column()
   position: string;
 
-  @ManyToOne(() => Department, (Department) => Department.nameDepartment)
+  @ManyToOne(() => Department, (depart) => depart.users)
   department: Department;
 }

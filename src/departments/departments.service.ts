@@ -20,6 +20,10 @@ export class DepartmentsService {
     return await this.departmentRepository.find();
   }
 
+  async findByOne(id: number) {
+    return await this.departmentRepository.findOneBy({ id });
+  }
+
   async update(updateDepartmentDto: UpdateDepartmentDto) {
     const id = updateDepartmentDto.id;
     const data: any = {
