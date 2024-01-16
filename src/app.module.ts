@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -18,6 +19,7 @@ import { Region } from './regions/entities/region.entity';
 import { Dimension } from './dimensions/entities/dimension.entity';
 import { Delivery } from './deliveries/entities/delivery.entity';
 import { Activity } from './activities/entities/activity.entity';
+import configuration from './config/configuration';
 
 @Module({
   imports: [
@@ -40,6 +42,7 @@ import { Activity } from './activities/entities/activity.entity';
       ],
       synchronize: true,
     }),
+    ConfigModule.forRoot({ isGlobal: true, load: [configuration] }),
     UsersModule,
     StoragesModule,
     FilialsModule,
