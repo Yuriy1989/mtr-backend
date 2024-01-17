@@ -11,6 +11,7 @@ import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { DepartmentsService } from 'src/departments/departments.service';
+import { AuthUser } from 'src/common/decorators/user.decorator';
 
 @Controller('users')
 export class UsersController {
@@ -29,10 +30,23 @@ export class UsersController {
     return this.usersService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.usersService.findOne(+id);
+  @Get('me')
+  findOwn(@AuthUser() user) {
+    return this.usersService.findOne({
+      where: { id: user.id },
+      select: {
+        email: true,
+        firstName: true,
+        lastName: true,
+        surname: true,
+      },
+    });
   }
+
+  // @Get(':id')
+  // findOne(@Param('id') id: string) {
+  //   return this.usersService.findOne(+id);
+  // }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
