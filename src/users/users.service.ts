@@ -44,6 +44,11 @@ export class UsersService {
     return await this.userRepository.findOneOrFail(query);
   }
 
+  async findByUsername(username: string): Promise<User> {
+    const user = await this.userRepository.findOneBy({ username });
+    return user;
+  }
+
   async update(id: number, updateUserDto: UpdateUserDto) {
     const { password } = updateUserDto;
     const user = await this.findById(id);

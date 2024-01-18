@@ -12,7 +12,7 @@ import { ActivitiesModule } from './activities/activities.module';
 import { DeliveriesModule } from './deliveries/deliveries.module';
 import configuration from './config/configuration';
 import { AppServices } from './config/appService';
-import { AppService } from './app.service';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -31,8 +31,9 @@ import { AppService } from './app.service';
     RegionsModule,
     ActivitiesModule,
     DeliveriesModule,
+    AuthModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [],
 })
 export class AppModule {}
