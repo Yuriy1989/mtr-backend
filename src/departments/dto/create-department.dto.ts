@@ -1,9 +1,9 @@
-import { IsInt, IsString } from 'class-validator';
+import { IsString } from 'class-validator';
 
 export class CreateDepartmentDto {
-  @IsInt()
-  id?: number;
+  @IsString()
+  nameDepartment: string;
 
   @IsString()
-  name: string;
+  numberDepartment: string;
 }

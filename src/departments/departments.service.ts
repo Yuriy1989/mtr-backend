@@ -27,13 +27,14 @@ export class DepartmentsService {
   async update(updateDepartmentDto: UpdateDepartmentDto) {
     const id = updateDepartmentDto.id;
     const data: any = {
-      nameDepartment: updateDepartmentDto.name,
+      nameDepartment: updateDepartmentDto.nameDepartment,
     };
     return await this.departmentRepository.update({ id }, data);
   }
 
   async remove(updateDepartmentDto: UpdateDepartmentDto) {
-    const id = updateDepartmentDto[0].id;
+    console.log('updateDepartmentDto', updateDepartmentDto);
+    const id = updateDepartmentDto.id;
     return await this.departmentRepository.delete(id);
   }
 }
