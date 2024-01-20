@@ -24,17 +24,17 @@ export class DepartmentsService {
     return await this.departmentRepository.findOneBy({ id });
   }
 
-  async update(updateDepartmentDto: UpdateDepartmentDto) {
+  async update(updateDepartmentDto: any) {
+    console.log(updateDepartmentDto);
     const id = updateDepartmentDto.id;
     const data: any = {
       nameDepartment: updateDepartmentDto.nameDepartment,
+      numberDepartment: updateDepartmentDto.numberDepartment,
     };
     return await this.departmentRepository.update({ id }, data);
   }
 
-  async remove(updateDepartmentDto: UpdateDepartmentDto) {
-    console.log('updateDepartmentDto', updateDepartmentDto);
-    const id = updateDepartmentDto.id;
+  async remove(id: number) {
     return await this.departmentRepository.delete(id);
   }
 }

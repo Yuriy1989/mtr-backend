@@ -18,12 +18,12 @@ export class DepartmentsController {
   }
 
   @Patch()
-  update(@Body() updateDepartmentDto: UpdateDepartmentDto) {
+  update(@Body() updateDepartmentDto: any) {
     return this.departmentsService.update(updateDepartmentDto);
   }
 
   @Delete()
-  remove(@Body() updateDepartmentDto: UpdateDepartmentDto) {
-    return this.departmentsService.remove(updateDepartmentDto);
+  remove(@Body() id: number) {
+    return this.departmentsService.remove(id);
   }
 }
