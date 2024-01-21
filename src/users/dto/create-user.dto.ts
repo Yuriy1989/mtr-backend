@@ -1,4 +1,4 @@
-import { IsString } from 'class-validator';
+import { IsInt, IsString } from 'class-validator';
 
 export class CreateUserDto {
   @IsString()
@@ -21,4 +21,7 @@ export class CreateUserDto {
 
   @IsString()
   position: string;
+
+  // @IsInt()
+  // department: number;
 }

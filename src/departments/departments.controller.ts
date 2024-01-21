@@ -18,7 +18,7 @@ export class DepartmentsController {
   }
 
   @Patch()
-  update(@Body() updateDepartmentDto: any) {
+  update(@Body() updateDepartmentDto: UpdateDepartmentDto) {
     return this.departmentsService.update(updateDepartmentDto);
   }
 

@@ -24,10 +24,9 @@ export class DepartmentsService {
     return await this.departmentRepository.findOneBy({ id });
   }
 
-  async update(updateDepartmentDto: any) {
-    console.log(updateDepartmentDto);
-    const id = updateDepartmentDto.id;
-    const data: any = {
+  async update(updateDepartmentDto: UpdateDepartmentDto) {
+    const id: number = updateDepartmentDto.id;
+    const data: CreateDepartmentDto = {
       nameDepartment: updateDepartmentDto.nameDepartment,
       numberDepartment: updateDepartmentDto.numberDepartment,
     };
