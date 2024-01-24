@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { CreateStorageDto } from './dto/create-storage.dto';
-import { UpdateStorageDto } from './dto/update-storage.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Storage } from './entities/storage.entity';
@@ -20,16 +19,11 @@ export class StoragesService {
     return await this.storageRepository.find();
   }
 
-  async update(updateStorageDto: UpdateStorageDto) {
-    const id = updateStorageDto.id;
-    const data: any = {
-      nameStorage: updateStorageDto.name,
-    };
-    return await this.storageRepository.update({ id }, data);
+  async update(updateStorageDto: any, id: number) {
+    return await this.storageRepository.update({ id }, updateStorageDto);
   }
 
-  async remove(updateStorageDto: UpdateStorageDto) {
-    const id = updateStorageDto[0].id;
+  async remove(id: number) {
     return await this.storageRepository.delete(id);
   }
 }

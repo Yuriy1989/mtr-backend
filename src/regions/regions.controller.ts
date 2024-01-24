@@ -1,7 +1,6 @@
 import { Controller, Get, Post, Body, Patch, Delete } from '@nestjs/common';
 import { RegionsService } from './regions.service';
 import { CreateRegionDto } from './dto/create-region.dto';
-import { UpdateRegionDto } from './dto/update-region.dto';
 
 @Controller('regions')
 export class RegionsController {
@@ -18,12 +17,16 @@ export class RegionsController {
   }
 
   @Patch()
-  update(@Body() updateRegionDto: UpdateRegionDto) {
-    return this.regionsService.update(updateRegionDto);
+  update(@Body() updateRegionDto: any) {
+    const id = updateRegionDto.id;
+    const data: any = {
+      nameRegion: updateRegionDto.name,
+    };
+    return this.regionsService.update(data, id);
   }
 
   @Delete()
-  remove(@Body() updateRegionDto: UpdateRegionDto) {
-    return this.regionsService.remove(updateRegionDto);
+  remove(@Body() id: any) {
+    return this.regionsService.remove(id);
   }
 }

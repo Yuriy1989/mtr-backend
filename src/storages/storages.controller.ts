@@ -1,7 +1,6 @@
 import { Controller, Get, Post, Body, Patch, Delete } from '@nestjs/common';
 import { StoragesService } from './storages.service';
 import { CreateStorageDto } from './dto/create-storage.dto';
-import { UpdateStorageDto } from './dto/update-storage.dto';
 
 @Controller('storages')
 export class StoragesController {
@@ -18,12 +17,16 @@ export class StoragesController {
   }
 
   @Patch()
-  update(@Body() updateStorageDto: UpdateStorageDto) {
-    return this.storagesService.update(updateStorageDto);
+  update(@Body() updateStorageDto: any) {
+    const id = updateStorageDto.id;
+    const data: any = {
+      nameStorage: updateStorageDto.name,
+    };
+    return this.storagesService.update(data, id);
   }
 
   @Delete()
-  remove(@Body() updateStorageDto: UpdateStorageDto) {
-    return this.storagesService.remove(updateStorageDto);
+  remove(@Body() id: any) {
+    return this.storagesService.remove(id.id);
   }
 }
