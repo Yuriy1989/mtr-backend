@@ -23,13 +23,12 @@ export class ActivitiesService {
   async update(updateActivityDto: UpdateActivityDto) {
     const id = updateActivityDto.id;
     const data: any = {
-      nameActivity: updateActivityDto.name,
+      nameActivity: updateActivityDto.nameActivity,
     };
     return await this.activityRepository.update({ id }, data);
   }
 
-  async remove(updateActivityDto: UpdateActivityDto) {
-    const id = updateActivityDto[0].id;
+  async remove(id: UpdateActivityDto) {
     return await this.activityRepository.delete(id);
   }
 }

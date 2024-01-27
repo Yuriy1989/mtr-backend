@@ -21,15 +21,14 @@ export class FilialsService {
   }
 
   async update(updateFilialDto: UpdateFilialDto) {
-    const id = updateFilialDto.id;
-    const data: any = {
-      nameFilial: updateFilialDto.name,
+    const id: number = updateFilialDto.id;
+    const data: CreateFilialDto = {
+      nameFilial: updateFilialDto.nameFilial,
     };
     return await this.filialRepository.update({ id }, data);
   }
 
-  async remove(updateFilialDto: UpdateFilialDto) {
-    const id = updateFilialDto[0].id;
+  async remove(id: UpdateFilialDto) {
     return await this.filialRepository.delete(id);
   }
 }

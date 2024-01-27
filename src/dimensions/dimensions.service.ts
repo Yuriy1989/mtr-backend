@@ -21,15 +21,14 @@ export class DimensionsService {
   }
 
   async update(updateDimensionDto: UpdateDimensionDto) {
-    const id = updateDimensionDto.id;
-    const data: any = {
-      nameDimension: updateDimensionDto.name,
+    const id: number = updateDimensionDto.id;
+    const data: CreateDimensionDto = {
+      nameDimension: updateDimensionDto.nameDimension,
     };
     return await this.dimansionRepository.update({ id }, data);
   }
 
-  async remove(updateDimensionDto: UpdateDimensionDto) {
-    const id = updateDimensionDto[0].id;
+  async remove(id: UpdateDimensionDto) {
     return await this.dimansionRepository.delete(id);
   }
 }

@@ -23,7 +23,7 @@ export class FilialsController {
   }
 
   @Delete()
-  remove(@Body() updateFilialDto: UpdateFilialDto) {
-    return this.filialsService.remove(updateFilialDto);
+  remove(@Body() id: UpdateFilialDto) {
+    return this.filialsService.remove(id);
   }
 }

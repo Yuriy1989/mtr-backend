@@ -23,7 +23,7 @@ export class ActivitiesController {
   }
 
   @Delete()
-  remove(@Body() updateActivityDto: UpdateActivityDto) {
-    return this.activitiesService.remove(updateActivityDto);
+  remove(@Body() id: UpdateActivityDto) {
+    return this.activitiesService.remove(id);
   }
 }

@@ -23,7 +23,7 @@ export class DimensionsController {
   }
 
   @Delete()
-  remove(@Body() updateDimensionDto: UpdateDimensionDto) {
-    return this.dimensionsService.remove(updateDimensionDto);
+  remove(@Body() id: UpdateDimensionDto) {
+    return this.dimensionsService.remove(id);
   }
 }

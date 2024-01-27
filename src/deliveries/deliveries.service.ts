@@ -21,15 +21,14 @@ export class DeliveriesService {
   }
 
   async update(updateDeliveryDto: UpdateDeliveryDto) {
-    const id = updateDeliveryDto.id;
-    const data: any = {
-      nameDelivery: updateDeliveryDto.name,
+    const id: number = updateDeliveryDto.id;
+    const data: CreateDeliveryDto = {
+      nameDelivery: updateDeliveryDto.nameDelivery,
     };
     return await this.deliveryRepository.update({ id }, data);
   }
 
-  async remove(updateDeliveryDto: UpdateDeliveryDto) {
-    const id = updateDeliveryDto[0].id;
+  async remove(id: UpdateDeliveryDto) {
     return await this.deliveryRepository.delete(id);
   }
 }

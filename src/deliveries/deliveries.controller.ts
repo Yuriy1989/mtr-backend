@@ -23,7 +23,7 @@ export class DeliveriesController {
   }
 
   @Delete()
-  remove(@Body() updateDeliveryDto: UpdateDeliveryDto) {
-    return this.deliveriesService.remove(updateDeliveryDto);
+  remove(@Body() id: UpdateDeliveryDto) {
+    return this.deliveriesService.remove(id);
   }
 }
