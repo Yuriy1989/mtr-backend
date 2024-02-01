@@ -13,6 +13,7 @@ import { DeliveriesModule } from './deliveries/deliveries.module';
 import configuration from './config/configuration';
 import { AppServices } from './config/appService';
 import { AuthModule } from './auth/auth.module';
+import { OrdersModule } from './orders/orders.module';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { AuthModule } from './auth/auth.module';
     ActivitiesModule,
     DeliveriesModule,
     AuthModule,
+    OrdersModule,
   ],
   controllers: [AppController],
   providers: [],
