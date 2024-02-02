@@ -5,7 +5,8 @@ import { UpdateOrderDto } from './dto/update-order.dto';
 @Injectable()
 export class OrdersService {
   create(createOrderDto: CreateOrderDto) {
-    return 'This action adds a new order';
+    console.log(createOrderDto);
+    return 'createOrderDto';
   }
 
   findAll() {
