@@ -1,4 +1,7 @@
-import { IsString } from 'class-validator';
+import { IsString, IsInt } from 'class-validator';
+import { CreateDepartmentDto } from 'src/departments/dto/create-department.dto';
+import { CreateRegionDto } from 'src/regions/dto/create-region.dto';
+import { CreateStorageDto } from 'src/storages/dto/create-storage.dto';
 
 export class CreateUserDto {
   @IsString()
@@ -21,4 +24,13 @@ export class CreateUserDto {
 
   @IsString()
   position: string;
+
+  @IsInt()
+  department: CreateDepartmentDto;
+
+  @IsInt()
+  storage: CreateStorageDto;
+
+  @IsInt()
+  region: CreateRegionDto;
 }

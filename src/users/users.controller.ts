@@ -13,6 +13,10 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { DepartmentsService } from 'src/departments/departments.service';
 import { AuthUser } from 'src/common/decorators/user.decorator';
 
+interface IidUser {
+  id: number;
+}
+
 @Controller('users')
 export class UsersController {
   constructor(
@@ -22,7 +26,6 @@ export class UsersController {
 
   @Post()
   createUser(@Body() createUserDto: CreateUserDto) {
-    console.log('createUserDto controller', createUserDto);
     return this.usersService.create(createUserDto);
   }
 
@@ -54,8 +57,9 @@ export class UsersController {
     return this.usersService.update(+id, updateUserDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.usersService.remove(+id);
+  @Delete()
+  remove(@Body() data: IidUser) {
+    console.log(data);
+    return this.usersService.remove(data.id);
   }
 }

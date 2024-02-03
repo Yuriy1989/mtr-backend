@@ -13,22 +13,21 @@ export class UsersService {
   ) {}
 
   async create(createUserDto: CreateUserDto) {
-    console.log('createUserDto', createUserDto);
     const { password } = createUserDto;
     const passwordHash = await createHash(password);
-    console.log('passwordHash', passwordHash);
-    const user = await this.userRepository.create({
+    const user = this.userRepository.create({
       ...createUserDto,
-      password,
+      password: passwordHash,
     });
-    console.log('user', user);
-    return await this.userRepository.save(createUserDto);
+    return await this.userRepository.save(user);
   }
 
   async findAll() {
     const data = await this.userRepository.find({
       relations: {
         department: true,
+        storage: true,
+        region: true,
       },
     });
     return data;
@@ -59,7 +58,7 @@ export class UsersService {
     return this.userRepository.save({ ...user, ...UpdateUserDto });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  async remove(id: number) {
+    return await this.userRepository.delete({ id });
   }
 }

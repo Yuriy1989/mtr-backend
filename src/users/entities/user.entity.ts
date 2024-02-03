@@ -8,6 +8,8 @@ import {
 } from 'typeorm';
 import { Department } from '../../departments/entities/department.entity';
 import { IsEmpty, IsNotEmpty } from 'class-validator';
+import { Storage } from 'src/storages/entities/storage.entity';
+import { Region } from 'src/regions/entities/region.entity';
 
 @Entity('users')
 export class User {
@@ -45,6 +47,14 @@ export class User {
   @IsNotEmpty()
   @ManyToOne(() => Department, (depart) => depart.users)
   department: Department;
+
+  @IsNotEmpty()
+  @ManyToOne(() => Storage, (storag) => storag.users)
+  storage: Storage;
+
+  @IsNotEmpty()
+  @ManyToOne(() => Region, (region) => region.users)
+  region: Region;
 
   @IsEmpty()
   @CreateDateColumn()

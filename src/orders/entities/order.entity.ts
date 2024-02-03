@@ -13,7 +13,10 @@ export class Order {
   id: number;
 
   @Column()
-  numberOrder: number;
+  numberOrder: string;
+
+  @Column()
+  createUser: string;
 
   @IsEmpty()
   @CreateDateColumn()

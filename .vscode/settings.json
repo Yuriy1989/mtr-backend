@@ -13,10 +13,12 @@
         "токен",
         "dimansion",
         "filials",
+        "Itest",
         "jwtsecret",
         "nestjs",
         "Responce",
         "signin",
+        "storag",
         "Toket",
         "typeorm"
     ]
