@@ -18,6 +18,12 @@ export class Order {
   @Column()
   createUser: string;
 
+  @Column()
+  regions: string;
+
+  @Column()
+  storages: string;
+
   @IsEmpty()
   @CreateDateColumn()
   createdAt: Date;
