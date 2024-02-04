@@ -3,6 +3,7 @@ import {
   CreateDateColumn,
   Entity,
   ManyToOne,
+  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -10,6 +11,7 @@ import { Department } from '../../departments/entities/department.entity';
 import { IsEmpty, IsNotEmpty } from 'class-validator';
 import { Storage } from 'src/storages/entities/storage.entity';
 import { Region } from 'src/regions/entities/region.entity';
+import { Order } from 'src/orders/entities/order.entity';
 
 @Entity('users')
 export class User {
@@ -55,6 +57,10 @@ export class User {
   @IsNotEmpty()
   @ManyToOne(() => Region, (region) => region.users)
   region: Region;
+
+  @IsNotEmpty()
+  @OneToOne(() => Order, (order) => order.user)
+  order: Order;
 
   @IsEmpty()
   @CreateDateColumn()

@@ -1,8 +1,13 @@
-import { IsEmpty } from 'class-validator';
+import { IsEmpty, IsNotEmpty } from 'class-validator';
+import { Region } from 'src/regions/entities/region.entity';
+import { Storage } from 'src/storages/entities/storage.entity';
+import { User } from 'src/users/entities/user.entity';
 import {
   Column,
   CreateDateColumn,
   Entity,
+  ManyToOne,
+  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -15,14 +20,16 @@ export class Order {
   @Column()
   numberOrder: string;
 
-  @Column()
-  createUser: string;
+  @IsNotEmpty()
+  @ManyToOne(() => Region, (region) => region.orders)
+  region: Region;
 
-  @Column()
-  regions: string;
+  @IsNotEmpty()
+  @ManyToOne(() => Storage, (storage) => storage.orders)
+  storage: Storage;
 
-  @Column()
-  storages: string;
+  @OneToOne(() => User)
+  user: User;
 
   @IsEmpty()
   @CreateDateColumn()
