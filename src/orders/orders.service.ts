@@ -12,9 +12,9 @@ export class OrdersService {
     private orderRepository: Repository<Order>,
   ) {}
 
-  create(createOrderDto: CreateOrderDto) {
+  async create(createOrderDto: any) {
     console.log(createOrderDto);
-    return 'createOrderDto';
+    return await this.orderRepository.save(createOrderDto);
   }
 
   async findAll() {
