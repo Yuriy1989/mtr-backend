@@ -2,8 +2,9 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
   ManyToOne,
-  OneToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -50,17 +51,15 @@ export class User {
   @ManyToOne(() => Department, (depart) => depart.users)
   department: Department;
 
-  @IsNotEmpty()
   @ManyToOne(() => Storage, (storag) => storag.users)
   storage: Storage;
 
-  @IsNotEmpty()
   @ManyToOne(() => Region, (region) => region.users)
   region: Region;
 
   @IsNotEmpty()
-  @OneToOne(() => Order, (order) => order.user)
-  order: Order;
+  @OneToMany(() => Order, (order) => order.user)
+  orders: Order[];
 
   @IsEmpty()
   @CreateDateColumn()

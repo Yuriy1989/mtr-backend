@@ -17,9 +17,6 @@ export class Order {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
-  numberOrder: string;
-
   @IsNotEmpty()
   @ManyToOne(() => Region, (region) => region.orders)
   region: Region;
@@ -28,7 +25,8 @@ export class Order {
   @ManyToOne(() => Storage, (storage) => storage.orders)
   storage: Storage;
 
-  @OneToOne(() => User)
+  @IsNotEmpty()
+  @ManyToOne(() => User, (user) => user.orders)
   user: User;
 
   @IsEmpty()
