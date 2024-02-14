@@ -18,7 +18,13 @@ export class OrdersService {
   }
 
   async findAll() {
-    return await this.orderRepository.find();
+    return await this.orderRepository.find({
+      relations: {
+        region: true,
+        storage: true,
+        user: true,
+      },
+    });
   }
 
   findOne(id: number) {

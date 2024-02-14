@@ -3,11 +3,9 @@ import { Region } from 'src/regions/entities/region.entity';
 import { Storage } from 'src/storages/entities/storage.entity';
 import { User } from 'src/users/entities/user.entity';
 import {
-  Column,
   CreateDateColumn,
   Entity,
   ManyToOne,
-  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
