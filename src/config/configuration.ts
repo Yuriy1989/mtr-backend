@@ -9,4 +9,7 @@ export default () => ({
     password: process.env.DATABASE_PASSWORD || 'Qwerty@123',
     name: process.env.DATABASE_NAME || 'mtr_project',
   },
+  jwt: {
+    secret: process.env.JWT_SECRET || 'super_secret',
+  },
 });

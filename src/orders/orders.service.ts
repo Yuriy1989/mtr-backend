@@ -13,7 +13,6 @@ export class OrdersService {
   ) {}
 
   async create(createOrderDto: any) {
-    console.log(createOrderDto);
     return await this.orderRepository.save(createOrderDto);
   }
 

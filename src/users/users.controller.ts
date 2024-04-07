@@ -59,7 +59,6 @@ export class UsersController {
 
   @Delete()
   remove(@Body() data: IidUser) {
-    console.log(data);
     return this.usersService.remove(data.id);
   }
 }

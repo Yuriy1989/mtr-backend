@@ -9,7 +9,8 @@ import { createHash } from 'src/helpers/hash';
 @Injectable()
 export class UsersService {
   constructor(
-    @InjectRepository(User) private userRepository: Repository<User>,
+    @InjectRepository(User)
+    private userRepository: Repository<User>,
   ) {}
 
   async create(createUserDto: CreateUserDto) {
