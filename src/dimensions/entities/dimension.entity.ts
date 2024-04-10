@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { TableOrder } from 'src/table-order/entities/table-order.entity';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('dimansion')
 export class Dimension {
@@ -7,4 +8,7 @@ export class Dimension {
 
   @Column()
   nameDimension: string;
+
+  @OneToMany(() => TableOrder, (tableOrder) => tableOrder.dimension)
+  tableOrder: TableOrder[];
 }

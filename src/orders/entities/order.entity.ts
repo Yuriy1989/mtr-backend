@@ -1,11 +1,14 @@
 import { IsEmpty, IsNotEmpty } from 'class-validator';
 import { Region } from 'src/regions/entities/region.entity';
 import { Storage } from 'src/storages/entities/storage.entity';
+import { TableOrder } from 'src/table-order/entities/table-order.entity';
 import { User } from 'src/users/entities/user.entity';
 import {
   CreateDateColumn,
   Entity,
+  JoinColumn,
   ManyToOne,
+  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -34,4 +37,8 @@ export class Order {
   @IsEmpty()
   @UpdateDateColumn()
   updatedAt: Date;
+
+  @OneToOne(() => TableOrder)
+  @JoinColumn()
+  tableOrder: TableOrder;
 }
