@@ -32,7 +32,10 @@ export class TableOrderController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateTableOrderDto: UpdateTableOrderDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updateTableOrderDto: UpdateTableOrderDto,
+  ) {
     return this.tableOrderService.update(+id, updateTableOrderDto);
   }
 

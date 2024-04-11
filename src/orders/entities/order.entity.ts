@@ -8,7 +8,7 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
-  OneToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -38,7 +38,6 @@ export class Order {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  @OneToOne(() => TableOrder)
-  @JoinColumn()
+  @OneToMany(() => TableOrder, (tableOrder) => tableOrder.order)
   tableOrder: TableOrder;
 }

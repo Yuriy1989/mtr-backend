@@ -9,7 +9,6 @@ import {
   CreateDateColumn,
   Entity,
   ManyToOne,
-  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -57,6 +56,6 @@ export class TableOrder {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  @OneToOne(() => Order, (order) => order.tableOrder)
+  @ManyToOne(() => Order, (order) => order.tableOrder)
   order: Order;
 }
