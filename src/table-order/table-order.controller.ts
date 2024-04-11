@@ -16,8 +16,8 @@ export class TableOrderController {
   constructor(private readonly tableOrderService: TableOrderService) {}
 
   @Post()
-  create(@Body() createTableOrderDto: CreateTableOrderDto) {
-    console.log('createTableOrderDto', createTableOrderDto);
+  create(@Body() createTableOrderDto: any) {
+    console.log(createTableOrderDto);
     return this.tableOrderService.create(createTableOrderDto);
   }
 
