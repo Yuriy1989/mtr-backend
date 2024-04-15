@@ -45,7 +45,7 @@ export class TableOrder {
   @ManyToOne(() => Delivery, (delivery) => delivery.tableOrder)
   delivery: Delivery;
 
-  @Column()
+  @Column({ nullable: true })
   @IsOptional()
   note: string;
 
