@@ -1,4 +1,4 @@
-import { IsEmpty } from 'class-validator';
+import { IsEmpty, IsOptional } from 'class-validator';
 import { Activity } from 'src/activities/entities/activity.entity';
 import { Delivery } from 'src/deliveries/entities/delivery.entity';
 import { Dimension } from 'src/dimensions/entities/dimension.entity';
@@ -46,6 +46,7 @@ export class TableOrder {
   delivery: Delivery;
 
   @Column()
+  @IsOptional()
   note: string;
 
   @IsEmpty()
