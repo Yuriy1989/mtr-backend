@@ -6,7 +6,6 @@ import { User } from 'src/users/entities/user.entity';
 import {
   CreateDateColumn,
   Entity,
-  JoinColumn,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,

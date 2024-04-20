@@ -13,19 +13,41 @@ export class TableOrderService {
   ) {}
 
   async create(createTableOrderDto: any) {
-    return await this.tableOrderRepository.save(createTableOrderDto);
+    // return await this.tableOrderRepository.save(createTableOrderDto);
+    const insertWithRepositoryQueryBuilder = await this.tableOrderRepository
+      .createQueryBuilder()
+      .insert()
+      .into(TableOrder)
+      .values(createTableOrderDto)
+      .execute();
+    return insertWithRepositoryQueryBuilder;
   }
 
-  findAll() {
-    return `This action returns all tableOrder`;
+  async findAll() {
+    const postWithRepositoryQueryBuilder = await this.tableOrderRepository
+      .createQueryBuilder('TableOrder')
+      .getMany();
+    return postWithRepositoryQueryBuilder;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} tableOrder`;
+  async findOne(id: number) {
+    const postWithRepositoryQueryBuilder = await this.tableOrderRepository
+      .createQueryBuilder('TableOrder')
+      .getMany();
+
+    return postWithRepositoryQueryBuilder;
   }
 
-  update(id: number, updateTableOrderDto: UpdateTableOrderDto) {
-    return `This action updates a #${id} tableOrder`;
+  async update(updateTableOrderDto: any) {
+    const updateWithRepositoryQueryBuilder = await this.tableOrderRepository
+      .createQueryBuilder()
+      .insert()
+      .into(TableOrder)
+      .values(updateTableOrderDto)
+      .onConflict(`(id) DO UPDATE SET note = EXCLUDED.note`)
+      // .getQuery();
+      .execute();
+    return updateWithRepositoryQueryBuilder;
   }
 
   remove(id: number) {

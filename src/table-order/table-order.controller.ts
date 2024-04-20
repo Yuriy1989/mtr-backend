@@ -31,12 +31,10 @@ export class TableOrderController {
     return this.tableOrderService.findOne(+id);
   }
 
-  @Patch(':id')
-  update(
-    @Param('id') id: string,
-    @Body() updateTableOrderDto: UpdateTableOrderDto,
-  ) {
-    return this.tableOrderService.update(+id, updateTableOrderDto);
+  @Patch()
+  update(@Body() updateTableOrderDto: any) {
+    console.log('updateTableOrderDto', updateTableOrderDto);
+    return this.tableOrderService.update(updateTableOrderDto);
   }
 
   @Delete(':id')
