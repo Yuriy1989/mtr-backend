@@ -31,10 +31,12 @@ export class TableOrderService {
   }
 
   async findOne(id: number) {
+    console.log("id service", id);
     const postWithRepositoryQueryBuilder = await this.tableOrderRepository
       .createQueryBuilder('TableOrder')
+      .where('TableOrder.order = :id', { id })
+      // .getQuery();
       .getMany();
-
     return postWithRepositoryQueryBuilder;
   }
 

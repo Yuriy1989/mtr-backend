@@ -27,7 +27,7 @@ export class TableOrderController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  findOne(@Param('id') id: any) {
     return this.tableOrderService.findOne(+id);
   }
 
