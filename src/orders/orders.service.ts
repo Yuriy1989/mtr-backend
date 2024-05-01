@@ -26,8 +26,13 @@ export class OrdersService {
     });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} order`;
+  async findOne(id: number) {
+    const order = await this.orderRepository
+      .createQueryBuilder()
+      .leftJoinAndSelect('Order.region', 'region')
+      .where('Order.id = :id', { id })
+      .getOne();
+    return order;
   }
 
   update(id: number, updateOrderDto: UpdateOrderDto) {

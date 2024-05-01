@@ -31,11 +31,10 @@ export class TableOrderService {
   }
 
   async findOne(id: number) {
-    console.log("id service", id);
+    console.log('id service', id);
     const postWithRepositoryQueryBuilder = await this.tableOrderRepository
       .createQueryBuilder('TableOrder')
       .where('TableOrder.order = :id', { id })
-      // .getQuery();
       .getMany();
     return postWithRepositoryQueryBuilder;
   }
@@ -43,11 +42,9 @@ export class TableOrderService {
   async update(updateTableOrderDto: any) {
     const updateWithRepositoryQueryBuilder = await this.tableOrderRepository
       .createQueryBuilder()
-      .insert()
-      .into(TableOrder)
-      .values(updateTableOrderDto)
-      .onConflict(`(id) DO UPDATE SET note = EXCLUDED.note`)
-      // .getQuery();
+      .update(TableOrder)
+      .set(updateTableOrderDto)
+      .where('id = :id', { id: updateTableOrderDto.id })
       .execute();
     return updateWithRepositoryQueryBuilder;
   }
