@@ -9,6 +9,6 @@ export class Activity {
   @Column()
   nameActivity: string;
 
-  @OneToMany(() => TableOrder, (tableOrder) => tableOrder.activity)
-  tableOrder: TableOrder[];
+  // @OneToMany(() => TableOrder, (tableOrder) => tableOrder.activity)
+  // tableOrder: TableOrder[];
 }

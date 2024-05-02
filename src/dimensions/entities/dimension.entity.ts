@@ -9,6 +9,6 @@ export class Dimension {
   @Column()
   nameDimension: string;
 
-  @OneToMany(() => TableOrder, (tableOrder) => tableOrder.dimension)
-  tableOrder: TableOrder[];
+  // @OneToMany(() => TableOrder, (tableOrder) => tableOrder.dimension)
+  // tableOrder: TableOrder[];
 }

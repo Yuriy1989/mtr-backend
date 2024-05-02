@@ -9,6 +9,6 @@ export class Delivery {
   @Column()
   nameDelivery: string;
 
-  @OneToMany(() => TableOrder, (tableOrder) => tableOrder.delivery)
-  tableOrder: TableOrder[];
+  // @OneToMany(() => TableOrder, (tableOrder) => tableOrder.delivery)
+  // tableOrder: TableOrder[];
 }

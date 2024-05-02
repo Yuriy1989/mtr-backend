@@ -9,6 +9,6 @@ export class Filial {
   @Column()
   nameFilial: string;
 
-  @OneToMany(() => TableOrder, (tableOrder) => tableOrder.filial)
-  tableOrder: TableOrder[];
+  // @OneToMany(() => TableOrder, (tableOrder) => tableOrder.filial)
+  // tableOrder: TableOrder[];
 }

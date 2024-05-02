@@ -24,26 +24,38 @@ export class TableOrder {
   @Column()
   numberPartMTR: string;
 
-  @Column()
+  @Column({ nullable: true })
   nameMTR: string;
 
-  @ManyToOne(() => Activity, (activity) => activity.tableOrder)
-  activity: Activity;
+  // @ManyToOne(() => Activity, (activity) => activity.tableOrder)
+  // activity: Activity;
 
-  @Column()
+  @Column({ nullable: true })
+  activity: string;
+
+  @Column({ nullable: true })
   inventoryNumber: string;
 
-  @ManyToOne(() => Dimension, (dimension) => dimension.tableOrder)
-  dimension: Dimension;
+  // @ManyToOne(() => Dimension, (dimension) => dimension.tableOrder)
+  // dimension: Dimension;
 
-  @Column()
+  @Column({ nullable: true })
+  dimension: string;
+
+  @Column({ nullable: true })
   amountMTR: number;
 
-  @ManyToOne(() => Filial, (filial) => filial.tableOrder)
-  filial: Filial;
+  // @ManyToOne(() => Filial, (filial) => filial.tableOrder)
+  // filial: Filial;
 
-  @ManyToOne(() => Delivery, (delivery) => delivery.tableOrder)
-  delivery: Delivery;
+  @Column({ nullable: true })
+  filial: string;
+
+  // @ManyToOne(() => Delivery, (delivery) => delivery.tableOrder)
+  // delivery: Delivery;
+
+  @Column({ nullable: true })
+  delivery: string;
 
   @Column({ nullable: true })
   @IsOptional()
