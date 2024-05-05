@@ -37,8 +37,8 @@ export class TableOrderController {
     return this.tableOrderService.update(updateTableOrderDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.tableOrderService.remove(+id);
+  @Delete()
+  remove(@Body() id: any) {
+    return this.tableOrderService.remove(+id.id);
   }
 }

@@ -49,7 +49,7 @@ export class TableOrderService {
     return updateWithRepositoryQueryBuilder;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} tableOrder`;
+  async remove(id: number) {
+    return await this.tableOrderRepository.delete({ id });
   }
 }
