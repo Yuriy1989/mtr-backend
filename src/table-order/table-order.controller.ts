@@ -33,7 +33,6 @@ export class TableOrderController {
 
   @Patch()
   update(@Body() updateTableOrderDto: any) {
-    console.log('updateTableOrderDto', updateTableOrderDto);
     return this.tableOrderService.update(updateTableOrderDto);
   }
 
