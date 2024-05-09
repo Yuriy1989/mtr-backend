@@ -1,4 +1,5 @@
 import { IsEmpty, IsNotEmpty } from 'class-validator';
+import { Application } from 'src/applications/entities/application.entity';
 import { Region } from 'src/regions/entities/region.entity';
 import { Storage } from 'src/storages/entities/storage.entity';
 import { TableOrder } from 'src/table-order/entities/table-order.entity';
@@ -6,8 +7,10 @@ import { User } from 'src/users/entities/user.entity';
 import {
   CreateDateColumn,
   Entity,
+  JoinColumn,
   ManyToOne,
   OneToMany,
+  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -39,4 +42,8 @@ export class Order {
 
   @OneToMany(() => TableOrder, (tableOrder) => tableOrder.order)
   tableOrder: TableOrder;
+
+  @OneToOne(() => Application)
+  @JoinColumn()
+  application: Application;
 }

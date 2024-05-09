@@ -15,6 +15,8 @@ import { AppServices } from './config/appService';
 import { AuthModule } from './auth/auth.module';
 import { OrdersModule } from './orders/orders.module';
 import { TableOrderModule } from './table-order/table-order.module';
+import { ApplicationsModule } from './applications/applications.module';
+import { TableApplicationsModule } from './table-applications/table-applications.module';
 
 @Module({
   imports: [
@@ -36,6 +38,8 @@ import { TableOrderModule } from './table-order/table-order.module';
     AuthModule,
     OrdersModule,
     TableOrderModule,
+    ApplicationsModule,
+    TableApplicationsModule,
   ],
   controllers: [AppController],
   providers: [],

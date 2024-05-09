@@ -12,6 +12,7 @@ import { IsEmpty, IsNotEmpty } from 'class-validator';
 import { Storage } from 'src/storages/entities/storage.entity';
 import { Region } from 'src/regions/entities/region.entity';
 import { Order } from 'src/orders/entities/order.entity';
+import { Application } from 'src/applications/entities/application.entity';
 
 @Entity('users')
 export class User {
@@ -59,6 +60,10 @@ export class User {
   @IsNotEmpty()
   @OneToMany(() => Order, (order) => order.user)
   orders: Order[];
+
+  @IsNotEmpty()
+  @OneToMany(() => Application, (application) => application.user)
+  applications: Application[];
 
   @IsEmpty()
   @CreateDateColumn()

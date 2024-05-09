@@ -26,6 +26,7 @@ export class TableOrderService {
   async findAll() {
     const postWithRepositoryQueryBuilder = await this.tableOrderRepository
       .createQueryBuilder('TableOrder')
+      .orderBy('TableOrder.id', 'ASC')
       .getMany();
     return postWithRepositoryQueryBuilder;
   }
@@ -34,6 +35,7 @@ export class TableOrderService {
     console.log('id service', id);
     const postWithRepositoryQueryBuilder = await this.tableOrderRepository
       .createQueryBuilder('TableOrder')
+      .orderBy('TableOrder.id', 'ASC')
       .where('TableOrder.order = :id', { id })
       .getMany();
     return postWithRepositoryQueryBuilder;
