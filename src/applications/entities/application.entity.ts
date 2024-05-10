@@ -5,6 +5,7 @@ import { User } from 'src/users/entities/user.entity';
 import {
   CreateDateColumn,
   Entity,
+  JoinColumn,
   ManyToOne,
   OneToMany,
   OneToOne,
@@ -17,7 +18,11 @@ export class Application {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @OneToOne(() => Order, (order) => order.id)
+//   @OneToOne(() => Order, (order) => order.id)
+//   order: Order;
+
+  @OneToOne(() => Order)
+  @JoinColumn()
   order: Order;
 
   @IsNotEmpty()

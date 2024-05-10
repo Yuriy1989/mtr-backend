@@ -12,7 +12,7 @@ export class ApplicationsService {
     private applicationRepository: Repository<Application>,
   ) {}
 
-  async create(createApplicationDto: CreateApplicationDto) {
+  async create(createApplicationDto: any) {
     return await this.applicationRepository.save(createApplicationDto);
   }
 

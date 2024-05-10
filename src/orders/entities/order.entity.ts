@@ -43,7 +43,9 @@ export class Order {
   @OneToMany(() => TableOrder, (tableOrder) => tableOrder.order)
   tableOrder: TableOrder;
 
-  @OneToOne(() => Application)
-  @JoinColumn()
+//   @OneToOne(() => Application)
+//   @JoinColumn()
+  // application: Application;
+  @OneToOne(() => Application, (application) => application.order)
   application: Application;
 }

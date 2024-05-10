@@ -16,7 +16,7 @@ export class ApplicationsController {
   constructor(private readonly applicationsService: ApplicationsService) {}
 
   @Post()
-  create(@Body() createApplicationDto: CreateApplicationDto) {
+  create(@Body() createApplicationDto: any) {
     return this.applicationsService.create(createApplicationDto);
   }
 
