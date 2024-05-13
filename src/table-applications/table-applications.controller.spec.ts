@@ -11,7 +11,9 @@ describe('TableApplicationsController', () => {
       providers: [TableApplicationsService],
     }).compile();
 
-    controller = module.get<TableApplicationsController>(TableApplicationsController);
+    controller = module.get<TableApplicationsController>(
+      TableApplicationsController,
+    );
   });
 
   it('should be defined', () => {

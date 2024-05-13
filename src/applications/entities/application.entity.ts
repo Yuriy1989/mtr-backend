@@ -18,8 +18,8 @@ export class Application {
   @PrimaryGeneratedColumn()
   id: number;
 
-//   @OneToOne(() => Order, (order) => order.id)
-//   order: Order;
+  //   @OneToOne(() => Order, (order) => order.id)
+  //   order: Order;
 
   @OneToOne(() => Order)
   @JoinColumn()

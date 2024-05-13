@@ -1,11 +1,21 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { TableApplicationsService } from './table-applications.service';
 import { CreateTableApplicationDto } from './dto/create-table-application.dto';
 import { UpdateTableApplicationDto } from './dto/update-table-application.dto';
 
 @Controller('table-applications')
 export class TableApplicationsController {
-  constructor(private readonly tableApplicationsService: TableApplicationsService) {}
+  constructor(
+    private readonly tableApplicationsService: TableApplicationsService,
+  ) {}
 
   @Post()
   create(@Body() createTableApplicationDto: CreateTableApplicationDto) {
@@ -23,7 +33,10 @@ export class TableApplicationsController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateTableApplicationDto: UpdateTableApplicationDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updateTableApplicationDto: UpdateTableApplicationDto,
+  ) {
     return this.tableApplicationsService.update(+id, updateTableApplicationDto);
   }
 
