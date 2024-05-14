@@ -5,6 +5,7 @@ import { Storage } from 'src/storages/entities/storage.entity';
 import { TableOrder } from 'src/table-order/entities/table-order.entity';
 import { User } from 'src/users/entities/user.entity';
 import {
+  Column,
   CreateDateColumn,
   Entity,
   JoinColumn,
@@ -19,6 +20,9 @@ import {
 export class Order {
   @PrimaryGeneratedColumn()
   id: number;
+
+  @Column({ nullable: true }) //status
+  status: number;
 
   @IsNotEmpty()
   @ManyToOne(() => Region, (region) => region.orders)

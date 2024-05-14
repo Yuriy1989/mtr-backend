@@ -4,11 +4,13 @@ import { Delivery } from 'src/deliveries/entities/delivery.entity';
 import { Dimension } from 'src/dimensions/entities/dimension.entity';
 import { Filial } from 'src/filials/entities/filial.entity';
 import { Order } from 'src/orders/entities/order.entity';
+import { TableApplication } from 'src/table-applications/entities/table-application.entity';
 import {
   Column,
   CreateDateColumn,
   Entity,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -71,4 +73,10 @@ export class TableOrder {
 
   @ManyToOne(() => Order, (order) => order.tableOrder)
   order: Order;
+
+  @OneToMany(
+    () => TableApplication,
+    (tableApplication) => tableApplication.tableOrder,
+  )
+  tableApplication: TableApplication;
 }

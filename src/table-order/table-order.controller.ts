@@ -17,7 +17,6 @@ export class TableOrderController {
 
   @Post()
   create(@Body() createTableOrderDto: any) {
-    console.log(createTableOrderDto);
     return this.tableOrderService.create(createTableOrderDto);
   }
 

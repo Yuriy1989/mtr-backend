@@ -18,7 +18,8 @@ export class TableApplicationsController {
   ) {}
 
   @Post()
-  create(@Body() createTableApplicationDto: CreateTableApplicationDto) {
+  create(@Body() createTableApplicationDto: any) {
+    console.log('createTableApplicationDto', createTableApplicationDto);
     return this.tableApplicationsService.create(createTableApplicationDto);
   }
 
@@ -28,16 +29,14 @@ export class TableApplicationsController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  findOne(@Param('id') id: any) {
     return this.tableApplicationsService.findOne(+id);
   }
 
-  @Patch(':id')
-  update(
-    @Param('id') id: string,
-    @Body() updateTableApplicationDto: UpdateTableApplicationDto,
-  ) {
-    return this.tableApplicationsService.update(+id, updateTableApplicationDto);
+  @Patch()
+  update(@Body() updateTableApplicationDto: any) {
+    console.log('updateTableApplicationDto', updateTableApplicationDto);
+    return this.tableApplicationsService.update(updateTableApplicationDto);
   }
 
   @Delete(':id')

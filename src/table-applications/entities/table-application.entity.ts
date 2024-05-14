@@ -1,5 +1,6 @@
 import { IsEmpty, IsOptional } from 'class-validator';
 import { Application } from 'src/applications/entities/application.entity';
+import { TableOrder } from 'src/table-order/entities/table-order.entity';
 import {
   Column,
   CreateDateColumn,
@@ -15,36 +16,45 @@ export class TableApplication {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
-  codeMTR: string; //Код МТР
+  // @Column()
+  // codeMTR: string; //Код МТР
 
-  @Column()
-  numberPartMTR: string; //Номер партии
+  // @Column()
+  // numberPartMTR: string; //Номер партии
 
-  @Column({ nullable: true }) //Наименование МТР
-  nameMTR: string;
+  // @Column({ nullable: true }) //Наименование МТР
+  // nameMTR: string;
 
-  @Column({ nullable: true }) //Объект
-  activity: string;
+  // @Column({ nullable: true }) //Объект
+  // activity: string;
 
-  @Column({ nullable: true }) //Инвентарный номер объекта
-  inventoryNumber: string;
+  // @Column({ nullable: true }) //Инвентарный номер объекта
+  // inventoryNumber: string;
 
-  @Column({ nullable: true }) //Ед.изм.
-  dimension: string;
+  // @Column({ nullable: true }) //Ед.изм.
+  // dimension: string;
 
-  @Column({ nullable: true }) //Кол-во
-  amountMTR: number;
+  // @Column({ nullable: true }) //Кол-во
+  // amountMTR: number;
 
-  @Column({ nullable: true }) //Филиал
-  filial: string;
+  // @Column({ nullable: true }) //Филиал
+  // filial: string;
 
-  @Column({ nullable: true }) //Режим доставки МТР
-  delivery: string;
+  // @Column({ nullable: true }) //Режим доставки МТР
+  // delivery: string;
 
-  @Column({ nullable: true }) //Примечание
-  @IsOptional()
-  note: string;
+  // @Column({ nullable: true }) //Примечание
+  // @IsOptional()
+  // note: string;
+
+  @Column({ nullable: true }) //Длина одной единицы
+  lengthObject: string;
+
+  @Column({ nullable: true }) //Ширина одной единицы
+  width: string;
+
+  @Column({ nullable: true }) //Высота одной единицы
+  height: string;
 
   @Column({ nullable: true }) //Вес одной единицы
   massa: string;
@@ -87,6 +97,9 @@ export class TableApplication {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  @ManyToOne(() => Application, (application) => application.tableApplication)
+  @ManyToOne(() => TableOrder, (tableOrder) => tableOrder.tableApplication)
+  tableOrder: TableApplication;
+
+  @ManyToOne(() => Application, (application) => application.tableApplication) //связь приложения 3 с таблицей распоряжения
   application: Application;
 }
