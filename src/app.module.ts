@@ -17,6 +17,7 @@ import { OrdersModule } from './orders/orders.module';
 import { TableOrderModule } from './table-order/table-order.module';
 import { ApplicationsModule } from './applications/applications.module';
 import { TableApplicationsModule } from './table-applications/table-applications.module';
+import { ZapiskiModule } from './zapiski/zapiski.module';
 
 @Module({
   imports: [
@@ -40,6 +41,7 @@ import { TableApplicationsModule } from './table-applications/table-applications
     TableOrderModule,
     ApplicationsModule,
     TableApplicationsModule,
+    ZapiskiModule,
   ],
   controllers: [AppController],
   providers: [],
