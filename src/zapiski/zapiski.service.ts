@@ -12,8 +12,10 @@ export class ZapiskiService {
     private tableZapiskiRepository: Repository<Zapiski>,
   ) {}
 
-  create(createZapiskiDto: any) {
-    return 'This action adds a new zapiski';
+  async create(createZapiskiDto: any) {
+    console.log('createZapiskiDto', createZapiskiDto);
+    const newZapiski = this.tableZapiskiRepository.create(createZapiskiDto);
+    return await this.tableZapiskiRepository.save(newZapiski);
   }
 
   findAll() {

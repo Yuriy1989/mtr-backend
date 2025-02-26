@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { ZapiskiService } from './zapiski.service';
 import { CreateZapiskiDto } from './dto/create-zapiski.dto';
 import { UpdateZapiskiDto } from './dto/update-zapiski.dto';
@@ -8,7 +16,7 @@ export class ZapiskiController {
   constructor(private readonly zapiskiService: ZapiskiService) {}
 
   @Post()
-  create(@Body() createZapiskiDto: CreateZapiskiDto) {
+  create(@Body() createZapiskiDto: any) {
     return this.zapiskiService.create(createZapiskiDto);
   }
 

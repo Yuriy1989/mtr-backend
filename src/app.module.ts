@@ -18,6 +18,10 @@ import { TableOrderModule } from './table-order/table-order.module';
 import { ApplicationsModule } from './applications/applications.module';
 import { TableApplicationsModule } from './table-applications/table-applications.module';
 import { ZapiskiModule } from './zapiski/zapiski.module';
+import { Vl06Module } from './vl06/vl06.module';
+import { MtrListModule } from './mtr-list/mtr-list.module';
+import { LinkVl06ZapiskiModule } from './link-vl06-zapiski/link-vl06-zapiski.module';
+import { LinkVl06MtrListModule } from './link-vl06-mtr-list/link-vl06-mtr-list.module';
 
 @Module({
   imports: [
@@ -42,6 +46,10 @@ import { ZapiskiModule } from './zapiski/zapiski.module';
     ApplicationsModule,
     TableApplicationsModule,
     ZapiskiModule,
+    Vl06Module,
+    MtrListModule,
+    LinkVl06ZapiskiModule,
+    LinkVl06MtrListModule,
   ],
   controllers: [AppController],
   providers: [],
