@@ -8,7 +8,6 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { Department } from '../../departments/entities/department.entity';
-import { IsEmpty, IsNotEmpty } from 'class-validator';
 import { Storage } from 'src/storages/entities/storage.entity';
 import { Region } from 'src/regions/entities/region.entity';
 import { Order } from 'src/orders/entities/order.entity';
@@ -19,57 +18,48 @@ export class User {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @IsNotEmpty()
   @Column()
   firstName: string;
 
-  @IsNotEmpty()
   @Column()
   lastName: string;
 
-  @IsNotEmpty()
   @Column()
   surname: string;
 
-  @IsNotEmpty()
   @Column()
   username: string;
 
-  @IsNotEmpty()
   @Column()
   password: string;
 
-  @IsNotEmpty()
   @Column()
   email: string;
 
-  @IsNotEmpty()
   @Column()
   position: string;
 
-  @IsNotEmpty()
   @ManyToOne(() => Department, (depart) => depart.users)
   department: Department;
 
-  @ManyToOne(() => Storage, (storag) => storag.users)
+  @ManyToOne(() => Storage, (storag) => storag.users, { nullable: true })
   storage: Storage;
 
-  @ManyToOne(() => Region, (region) => region.users)
+  @ManyToOne(() => Region, (region) => region.users, { nullable: true })
   region: Region;
-
-  @IsNotEmpty()
+ 
   @OneToMany(() => Order, (order) => order.user)
   orders: Order[];
 
-  @IsNotEmpty()
   @OneToMany(() => Application, (application) => application.user)
   applications: Application[];
 
-  @IsEmpty()
+  @Column('text', { array: true })
+  roles: string[];
+
   @CreateDateColumn()
   createdAt: Date;
 
-  @IsEmpty()
   @UpdateDateColumn()
   updatedAt: Date;
 }

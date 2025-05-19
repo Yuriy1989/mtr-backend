@@ -14,6 +14,7 @@ export class UsersService {
   ) {}
 
   async create(createUserDto: CreateUserDto) {
+    console.log('createUserDto services', createUserDto);
     const { password } = createUserDto;
     const passwordHash = await createHash(password);
     const user = this.userRepository.create({
@@ -49,14 +50,16 @@ export class UsersService {
     return user;
   }
 
-  async update(id: number, updateUserDto: UpdateUserDto) {
+  async update(id: number, updateUserDto: any) {
     const { password } = updateUserDto;
     const user = await this.findById(id);
     if (password) {
       updateUserDto.password = await createHash(password);
+    } else {
+      // если пароль не передан, не трогаем старый
+      delete updateUserDto.password;
     }
-
-    return this.userRepository.save({ ...user, ...UpdateUserDto });
+    return this.userRepository.save({ ...user, ...updateUserDto });
   }
 
   async remove(id: number) {

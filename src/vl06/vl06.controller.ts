@@ -17,12 +17,20 @@ export class Vl06Controller {
 
   @Post()
   create(@Body() createVl06Dto: any) {
-    return this.vl06Service.create(createVl06Dto);
+    const data = this.vl06Service.create(createVl06Dto);
+    return {
+      success: true,
+      data,
+    };
   }
 
   @Get()
-  findAll() {
-    return this.vl06Service.findAll();
+  async findAll() {
+    const data = await this.vl06Service.findAll();
+    return {
+      success: true,
+      data,
+    };
   }
 
   @Get(':id')

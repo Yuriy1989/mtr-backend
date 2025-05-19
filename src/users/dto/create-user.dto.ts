@@ -1,4 +1,4 @@
-import { IsString, IsInt, IsOptional } from 'class-validator';
+import { IsString, IsInt, IsOptional, IsArray } from 'class-validator';
 import { CreateDepartmentDto } from 'src/departments/dto/create-department.dto';
 import { CreateRegionDto } from 'src/regions/dto/create-region.dto';
 import { CreateStorageDto } from 'src/storages/dto/create-storage.dto';
@@ -35,4 +35,7 @@ export class CreateUserDto {
   @IsOptional()
   @IsInt()
   region?: CreateRegionDto;
+
+  @IsArray()
+  roles: string[];
 }
