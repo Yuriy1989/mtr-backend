@@ -1,7 +1,17 @@
-import { Controller, Get, Post, Body, Patch, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Delete,
+  UseGuards,
+} from '@nestjs/common';
 import { StoragesService } from './storages.service';
 import { CreateStorageDto } from './dto/create-storage.dto';
+import { JwtGuard } from 'src/auth/guard/jwtAuth.guard';
 
+@UseGuards(JwtGuard)
 @Controller('storages')
 export class StoragesController {
   constructor(private readonly storagesService: StoragesService) {}

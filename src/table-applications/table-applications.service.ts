@@ -1,59 +1,185 @@
-import { Injectable } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  ConflictException,
+} from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { DeepPartial, In, Repository } from 'typeorm';
+import { TableApplication } from './entities/table-application.entity';
 import { CreateTableApplicationDto } from './dto/create-table-application.dto';
 import { UpdateTableApplicationDto } from './dto/update-table-application.dto';
-import { TableApplication } from './entities/table-application.entity';
-import { Repository } from 'typeorm';
-import { InjectRepository } from '@nestjs/typeorm';
+import { UpsertAppendix3Dto } from './dto/upsert-app3.dto';
+import { Application } from 'src/applications/entities/application.entity';
+import { Zapiski } from 'src/zapiski/entities/zapiski.entity';
+import { Vl06 } from 'src/vl06/entities/vl06.entity';
+import { MtrList } from 'src/mtr-list/entities/mtr-list.entity';
 
 @Injectable()
 export class TableApplicationsService {
   constructor(
     @InjectRepository(TableApplication)
-    private tableApplicationRepository: Repository<TableApplication>,
+    private readonly appRowRepo: Repository<TableApplication>,
+    @InjectRepository(Application)
+    private readonly applicationRepo: Repository<Application>,
+    @InjectRepository(Zapiski)
+    private readonly zapRepo: Repository<Zapiski>,
+    @InjectRepository(Vl06)
+    private readonly vl06Repo: Repository<Vl06>,
+    @InjectRepository(MtrList)
+    private readonly mtrRepo: Repository<MtrList>,
   ) {}
 
-  async create(createTableApplicationDto: any) {
-    const insertWithRepositoryQueryBuilder =
-      await this.tableApplicationRepository
-        .createQueryBuilder()
-        .insert()
-        .into(TableApplication)
-        .values(createTableApplicationDto)
-        .execute();
-    return insertWithRepositoryQueryBuilder;
+  async create(dto: CreateTableApplicationDto) {
+    const app = this.appRowRepo.create(dto as DeepPartial<TableApplication>);
+    return this.appRowRepo.save(app);
   }
 
-  async findAll() {
-    const postWithRepositoryQueryBuilder = await this.tableApplicationRepository
-      .createQueryBuilder('TableApplication')
-      .leftJoinAndSelect('TableApplication.tableOrder', 'tableOrder')
-      .orderBy('TableApplication.id', 'ASC')
-      .getMany();
-    return postWithRepositoryQueryBuilder;
+  async update(id: number, dto: UpdateTableApplicationDto) {
+    const app = await this.appRowRepo.findOne({ where: { id } });
+    if (!app) throw new NotFoundException('TableApplication not found');
+    Object.assign(app, dto);
+    return this.appRowRepo.save(app);
   }
 
-  async findOne(id: number) {
-    console.log('id service', id);
-    const postWithRepositoryQueryBuilder = await this.tableApplicationRepository
-      .createQueryBuilder()
-      .leftJoinAndSelect('TableApplication.tableOrder', 'tableOrder')
-      .where('TableApplication.application = :id', { id })
-      .getMany();
-    return postWithRepositoryQueryBuilder;
+  /**
+   * Идемпотентное создание/обновление Приложения №3 для конкретной служебки.
+   * Гарантирует: 1 application на 1 zapiska, без дублей строк.
+   * Возвращает linkId = application.id
+   */
+  async upsertApp3(dto: UpsertAppendix3Dto) {
+    const { zapiskaId, userId, items = [] } = dto;
+    if (!zapiskaId) throw new ConflictException('zapiskaId is required');
+
+    return this.appRowRepo.manager.transaction(async (manager) => {
+      const zapRepo = manager.getRepository(Zapiski);
+      const applicationRepo = manager.getRepository(Application);
+      const appRowRepo = manager.getRepository(TableApplication);
+      const mtrRepo = manager.getRepository(MtrList);
+      const vl06Repo = manager.getRepository(Vl06);
+
+      const zap = await zapRepo.findOne({ where: { id: zapiskaId } });
+      if (!zap) throw new NotFoundException(`Записка ${zapiskaId} не найдена`);
+
+      // 1) application (user + статус 40)
+      let app = await applicationRepo.findOne({
+        where: { zapiska: { id: zapiskaId } },
+        relations: { zapiska: true, user: true },
+      });
+      if (!app) {
+        app = applicationRepo.create({
+          zapiska: zap,
+          user: userId ? ({ id: userId } as any) : null,
+          status: 40,
+        });
+      } else {
+        if (!app.user && userId) app.user = { id: userId } as any;
+        app.status = 40;
+      }
+      app = await applicationRepo.save(app);
+
+      // 2) апсертим строки по mtrListId
+      for (const it of items) {
+        const mid = Number(it.mtrListId);
+        if (!Number.isFinite(mid) || mid <= 0) continue;
+
+        // СТАЛО
+        const mtr = await mtrRepo.findOne({
+          where: { id: mid },
+          relations: { vl06: true },
+        });
+        if (!mtr) continue;
+
+        // Если позиция уже полностью отгружена — не позволяем её редактировать вообще
+        if (mtr.vl06?.status === 50) {
+          continue;
+        }
+
+        let row = await appRowRepo.findOne({
+          where: { listApp: { id: app.id }, mtrList: { id: mid } },
+        });
+
+        const patch: DeepPartial<TableApplication> = {
+          listApp: app,
+          mtrList: mtr,
+          dateRequest: it.dateRequest ?? null,
+          dateShipment: it.dateShipment ?? null,
+          format: it.format ?? null,
+          transportNumber: it.transportNumber ?? null,
+          transit: it.transit ?? '',
+          dateM11: it.dateM11 ?? null,
+          numberM11: it.numberM11 ?? '',
+          discarded:
+            typeof it.shippedQty === 'number'
+              ? String(it.shippedQty)
+              : it.shippedQty == null
+                ? null
+                : String(it.shippedQty),
+          remainder:
+            it.remainder == null
+              ? row?.remainder ?? null
+              : typeof it.remainder === 'number'
+                ? String(it.remainder)
+                : String(it.remainder),
+          addNote: it.note ?? '',
+        };
+
+        if (!row) {
+          row = appRowRepo.create(patch);
+        } else {
+          Object.assign(row, patch);
+        }
+        await appRowRepo.save(row);
+      }
+
+      // 3) статусы = 40 для zapiski и всех VL06 из служебки
+      if (zap.status !== 40)
+        await zapRepo.update({ id: zapiskaId }, { status: 40 });
+
+      const raw = await mtrRepo
+        .createQueryBuilder('m')
+        .select('DISTINCT m.vl06', 'vl06')
+        .where('m.zapiskiId = :id', { id: zapiskaId })
+        .getRawMany<{ vl06: number }>();
+
+      const vl06Ids = raw.map((r) => r.vl06).filter(Boolean);
+      if (vl06Ids.length) {
+        await vl06Repo.update({ id: In(vl06Ids) }, { status: 40 });
+      }
+
+      return {
+        success: true,
+        linkId: app.id,
+        data: {
+          applicationId: app.id,
+          updated: {
+            applicationStatus: 40,
+            zapiskaStatus: 40,
+            vl06Status: 40,
+            vl06Count: vl06Ids.length,
+          },
+        },
+      };
+    });
   }
 
-  async update(updateTableApplicationDto: any) {
-    const updateWithRepositoryQueryBuilder =
-      await this.tableApplicationRepository
-        .createQueryBuilder('TableApplication')
-        .update(TableApplication)
-        .set(updateTableApplicationDto)
-        .where('id = :id', { id: updateTableApplicationDto.id })
-        .execute();
-    return updateWithRepositoryQueryBuilder;
-  }
+  /**
+   * Вернуть приложение по id служебки
+   */
+  async getByZapiska(zapiskaId: number) {
+    const zap = await this.zapRepo.findOne({ where: { id: zapiskaId } });
+    if (!zap) throw new NotFoundException('Записка не найдена');
 
-  async remove(id: number) {
-    return await this.tableApplicationRepository.delete({ id });
+    const app = await this.applicationRepo.findOne({
+      where: { zapiska: { id: zapiskaId } },
+    });
+    if (!app) return { success: true, data: null };
+
+    const rows = await this.appRowRepo.find({
+      where: { listApp: { id: app.id } },
+      relations: { mtrList: { vl06: true } }, // ← подтягиваем vl06
+      order: { id: 'ASC' },
+    });
+
+    return { success: true, data: { application: app, rows } };
   }
 }

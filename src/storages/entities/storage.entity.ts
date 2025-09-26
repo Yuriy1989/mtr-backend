@@ -1,4 +1,3 @@
-import { Order } from 'src/orders/entities/order.entity';
 import { User } from 'src/users/entities/user.entity';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
@@ -12,7 +11,4 @@ export class Storage {
 
   @OneToMany(() => User, (user) => user.storage)
   users: User[];
-
-  @OneToMany(() => Order, (order) => order.storage)
-  orders: Order[];
 }

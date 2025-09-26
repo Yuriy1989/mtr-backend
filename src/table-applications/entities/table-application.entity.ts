@@ -1,92 +1,81 @@
-import { IsEmpty, IsOptional } from 'class-validator';
+import { IsEmpty } from 'class-validator';
 import { Application } from 'src/applications/entities/application.entity';
-import { TableOrder } from 'src/table-order/entities/table-order.entity';
+import { MtrList } from 'src/mtr-list/entities/mtr-list.entity';
+
 import {
   Column,
   CreateDateColumn,
   Entity,
-  ManyToMany,
+  Index,
+  JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
+  Unique,
   UpdateDateColumn,
 } from 'typeorm';
 
 @Entity('tableApplication')
+@Unique(['listApp', 'mtrList'])
 export class TableApplication {
   @PrimaryGeneratedColumn()
   id: number;
 
-  // @Column()
-  // codeMTR: string; //Код МТР
+  // --- связи с Приложение 3 а уже через нее со Служебной запиской ---
+  @ManyToOne(() => Application, (h) => h.tableApp, { onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'applicationId' })
+  @Index()
+  listApp: Application;
 
-  // @Column()
-  // numberPartMTR: string; //Номер партии
+  //привязка к строке MTR
+  @ManyToOne(() => MtrList, { onDelete: 'CASCADE', eager: true })
+  @JoinColumn({ name: 'mtrListId' })
+  @Index()
+  mtrList: MtrList;
 
-  // @Column({ nullable: true }) //Наименование МТР
-  // nameMTR: string;
-
-  // @Column({ nullable: true }) //Объект
-  // activity: string;
-
-  // @Column({ nullable: true }) //Инвентарный номер объекта
-  // inventoryNumber: string;
-
-  // @Column({ nullable: true }) //Ед.изм.
-  // dimension: string;
-
-  // @Column({ nullable: true }) //Кол-во
-  // amountMTR: number;
-
-  // @Column({ nullable: true }) //Филиал
-  // filial: string;
-
-  // @Column({ nullable: true }) //Режим доставки МТР
-  // delivery: string;
-
-  // @Column({ nullable: true }) //Примечание
-  // @IsOptional()
-  // note: string;
-
-  @Column({ nullable: true }) //Длина одной единицы
+  // --- поля доп. данных по Приложению №3 ---
+  @Column({ nullable: true }) // Длина одной единицы
   lengthObject: string;
 
-  @Column({ nullable: true }) //Ширина одной единицы
+  @Column({ nullable: true }) // Ширина одной единицы
   width: string;
 
-  @Column({ nullable: true }) //Высота одной единицы
+  @Column({ nullable: true }) // Высота одной единицы
   height: string;
 
-  @Column({ nullable: true }) //Вес одной единицы
+  @Column({ nullable: true }) // Вес одной единицы
   massa: string;
 
-  @Column({ nullable: true }) //Дата заявки на отгрузку
+  @Column({ nullable: true }) // Дата заявки на отгрузку
   dateRequest: string;
 
-  @Column({ nullable: true }) //Заявка на контейнер/автотранспорт
-  transport: string;
+  @Column({ nullable: true }) // Заявка на контейнер/автотранспорт (тип)
+  transport: string; // 'container' | 'auto' | null
 
-  @Column({ nullable: true }) //Дата отгрузки
+  @Column({ nullable: true }) // Дата отгрузки
   dateShipment: string;
 
-  @Column({ nullable: true }) //Груз сформирован в контейнер/автотранспорт
-  format: string;
+  @Column({ nullable: true }) // Груз сформирован в контейнер/автотранспорт (тип)
+  format: string; // 'container' | 'auto' | null
 
-  @Column({ nullable: true }) //Отгружено
+  @Column({ nullable: true }) // Номер контейнер/автотранспорт (НОВОЕ)
+  transportNumber: string;
+
+  @Column({ nullable: true }) // Отгружено (кол-во)
   discarded: string;
 
-  @Column({ nullable: true }) //Остаток
+  @Column({ nullable: true }) // Остаток
   remainder: string;
 
-  @Column({ nullable: true }) //Наименование транзитного или конечного получателя груза
+  @Column({ nullable: true }) // Транзитный/конечный получатель
   transit: string;
 
-  @Column({ nullable: true }) //№ накладной
+  @Column({ nullable: true }) // № накладной
   numberM11: string;
 
-  @Column({ nullable: true }) //Дата накладной
+  @Column({ nullable: true }) // Дата накладной
   dateM11: string;
 
-  @Column({ nullable: true }) //Примечание по доставке
+  @Column({ nullable: true }) // Примечание
   addNote: string;
 
   @IsEmpty()
@@ -96,10 +85,4 @@ export class TableApplication {
   @IsEmpty()
   @UpdateDateColumn()
   updatedAt: Date;
-
-  @ManyToOne(() => TableOrder, (tableOrder) => tableOrder.tableApplication)
-  tableOrder: TableApplication;
-
-  @ManyToOne(() => Application, (application) => application.tableApplication) //связь приложения 3 с таблицей распоряжения
-  application: Application;
 }

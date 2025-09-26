@@ -6,17 +6,19 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
 import { DepartmentsService } from 'src/departments/departments.service';
 import { AuthUser } from 'src/common/decorators/user.decorator';
+import { JwtGuard } from 'src/auth/guard/jwtAuth.guard';
 
 interface IidUser {
   id: number;
 }
 
+@UseGuards(JwtGuard)
 @Controller('users')
 export class UsersController {
   constructor(
@@ -38,6 +40,11 @@ export class UsersController {
     return this.usersService.findAll();
   }
 
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+    return this.usersService.findById(+id);
+  }
+
   @Get('me')
   findOwn(@AuthUser() user) {
     return this.usersService.findOne({
@@ -53,7 +60,6 @@ export class UsersController {
 
   @Patch()
   async update(@Body() updateUserDto: any) {
-    console.log('updateUserDto', updateUserDto);
     const updateUser = await this.usersService.update(
       updateUserDto?.id,
       updateUserDto,

@@ -1,8 +1,18 @@
-import { Controller, Get, Post, Body, Patch, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Delete,
+  UseGuards,
+} from '@nestjs/common';
 import { FilialsService } from './filials.service';
 import { CreateFilialDto } from './dto/create-filial.dto';
 import { UpdateFilialDto } from './dto/update-filial.dto';
+import { JwtGuard } from 'src/auth/guard/jwtAuth.guard';
 
+@UseGuards(JwtGuard)
 @Controller('filials')
 export class FilialsController {
   constructor(private readonly filialsService: FilialsService) {}

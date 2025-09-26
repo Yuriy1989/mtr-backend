@@ -6,28 +6,36 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
 import { ZapiskiService } from './zapiski.service';
-import { CreateZapiskiDto } from './dto/create-zapiski.dto';
 import { UpdateZapiskiDto } from './dto/update-zapiski.dto';
+import { JwtGuard } from 'src/auth/guard/jwtAuth.guard';
 
+@UseGuards(JwtGuard)
 @Controller('zapiski')
 export class ZapiskiController {
   constructor(private readonly zapiskiService: ZapiskiService) {}
 
   @Post()
-  create(@Body() createZapiskiDto: any) {
-    return this.zapiskiService.create(createZapiskiDto);
+  async create(@Body() createZapiskiDto: any) {
+    const zapiska = await this.zapiskiService.create(createZapiskiDto);
+    return {
+      success: true,
+      data: zapiska,
+    };
   }
 
   @Get()
-  findAll() {
-    return this.zapiskiService.findAll();
+  async findAll() {
+    const data = await this.zapiskiService.findAll();
+    return { success: true, data };
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.zapiskiService.findOne(+id);
+  async findOne(@Param('id') id: number) {
+    const data = await this.zapiskiService.findOne(+id);
+    return { success: true, data };
   }
 
   @Patch(':id')
@@ -35,8 +43,21 @@ export class ZapiskiController {
     return this.zapiskiService.update(+id, updateZapiskiDto);
   }
 
+  //«Отправить в работу»
+  @Patch(':id/send')
+  async sendToWork(@Param('id') id: number) {
+    const data = await this.zapiskiService.sendToWork(+id);
+    return { success: true, data };
+  }
+
+  @Patch(':id/send50')
+  async sendToSent(@Param('id') id: number) {
+    const data = await this.zapiskiService.sendToSent(+id);
+    return { success: true, data };
+  }
+
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  remove(@Param('id') id: number) {
     return this.zapiskiService.remove(+id);
   }
 }

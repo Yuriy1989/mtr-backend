@@ -10,6 +10,9 @@ export default () => ({
     name: process.env.DATABASE_NAME || 'mtr_project',
   },
   jwt: {
-    secret: process.env.JWT_SECRET || 'super_secret',
+    secret: process.env.JWT_SECRET || 'super_secret', // access
+    refreshSecret: process.env.JWT_REFRESH_SECRET, // refresh
+    ttl: process.env.JWT_TTL || '900s', // 15 мин (пример)
+    refreshTtl: process.env.JWT_REFRESH_TTL || '30d', // 30 дней
   },
 });

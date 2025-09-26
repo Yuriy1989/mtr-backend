@@ -1,5 +1,4 @@
-import { TableOrder } from 'src/table-order/entities/table-order.entity';
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('filials')
 export class Filial {
@@ -8,7 +7,4 @@ export class Filial {
 
   @Column()
   nameFilial: string;
-
-  // @OneToMany(() => TableOrder, (tableOrder) => tableOrder.filial)
-  // tableOrder: TableOrder[];
 }

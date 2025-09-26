@@ -6,11 +6,12 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
+  JoinColumn,
 } from 'typeorm';
 import { Department } from '../../departments/entities/department.entity';
 import { Storage } from 'src/storages/entities/storage.entity';
 import { Region } from 'src/regions/entities/region.entity';
-import { Order } from 'src/orders/entities/order.entity';
+import { Zapiski } from 'src/zapiski/entities/zapiski.entity';
 import { Application } from 'src/applications/entities/application.entity';
 
 @Entity('users')
@@ -45,14 +46,18 @@ export class User {
   @ManyToOne(() => Storage, (storag) => storag.users, { nullable: true })
   storage: Storage;
 
-  @ManyToOne(() => Region, (region) => region.users, { nullable: true })
+  @ManyToOne(() => Region, (region) => region.users, {
+    nullable: true,
+    onDelete: 'SET NULL',
+  })
+  @JoinColumn({ name: 'region_id' })
   region: Region;
- 
-  @OneToMany(() => Order, (order) => order.user)
-  orders: Order[];
+
+  @OneToMany(() => Zapiski, (zapiski) => zapiski.user)
+  zapiski: Zapiski[];
 
   @OneToMany(() => Application, (application) => application.user)
-  applications: Application[];
+  application: Application[];
 
   @Column('text', { array: true })
   roles: string[];

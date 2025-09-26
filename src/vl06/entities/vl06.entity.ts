@@ -1,4 +1,4 @@
-import { LinkVl06Zapiski } from 'src/link-vl06-zapiski/entities/link-vl06-zapiski.entity';
+import { MtrList } from 'src/mtr-list/entities/mtr-list.entity';
 import {
   Column,
   CreateDateColumn,
@@ -22,8 +22,8 @@ export class Vl06 {
   @Column({ nullable: true })
   storage: string; // "Склад"
 
-  @Column({ nullable: true })
-  vacationOfTheMaterial: string; // "Д/Отпуска материала"
+  @Column({ type: 'date', nullable: true })
+  vacationOfTheMaterial: Date | null; // "Д/Отпуска материала"
 
   @Column({ nullable: true })
   material: string; // "Материал"
@@ -37,8 +37,8 @@ export class Vl06 {
   @Column({ nullable: true })
   basic: string; // "Базовая ЕИ"
 
-  @Column({ nullable: true })
-  supplyVolume: string; // "Объем поставки"
+  @Column({ type: 'double precision', nullable: true })
+  supplyVolume: number | null;
 
   @Column({ nullable: true })
   address: string; // "Имя получателя материала"
@@ -46,8 +46,11 @@ export class Vl06 {
   @Column({ nullable: true })
   created: string; // "Создал"
 
-  @OneToMany(() => LinkVl06Zapiski, (link) => link.vl06)
-  links: LinkVl06Zapiski[];
+  @OneToMany(() => MtrList, (link) => link.vl06)
+  mtrList: MtrList[];
+
+  @Column({ nullable: true })
+  status: number;
 
   @CreateDateColumn()
   createdAt: Date;

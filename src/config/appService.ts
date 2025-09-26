@@ -7,7 +7,6 @@ import { join } from 'path';
 export class AppServices implements TypeOrmOptionsFactory {
   constructor(private configService: ConfigService) {}
   createTypeOrmOptions(): TypeOrmModuleOptions {
-    console.log('DB HOST:', this.configService.get<string>('database.host'));
     return {
       type: 'postgres',
       host: this.configService.get<string>('database.host'),

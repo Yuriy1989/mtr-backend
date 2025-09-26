@@ -1,46 +1,98 @@
+// C:\Server\data\htdocs\umtsik\mtr-backend\src\table-applications\table-applications.controller.ts
 import {
+  Body,
   Controller,
   Get,
-  Post,
-  Body,
-  Patch,
   Param,
-  Delete,
+  ParseIntPipe,
+  Patch,
+  Post,
+  Req,
+  UseGuards,
 } from '@nestjs/common';
+import { Request } from 'express';
 import { TableApplicationsService } from './table-applications.service';
 import { CreateTableApplicationDto } from './dto/create-table-application.dto';
 import { UpdateTableApplicationDto } from './dto/update-table-application.dto';
+import { UpsertAppendix3Dto } from './dto/upsert-app3.dto';
+import { JournalService } from 'src/journal/journal.service';
+import { JwtGuard } from 'src/auth/guard/jwtAuth.guard';
 
+@UseGuards(JwtGuard)
 @Controller('table-applications')
 export class TableApplicationsController {
   constructor(
-    private readonly tableApplicationsService: TableApplicationsService,
+    private readonly svc: TableApplicationsService,
+    private readonly journal: JournalService,
   ) {}
 
   @Post()
-  create(@Body() createTableApplicationDto: any) {
-    console.log('createTableApplicationDto', createTableApplicationDto);
-    return this.tableApplicationsService.create(createTableApplicationDto);
+  async create(@Body() dto: CreateTableApplicationDto, @Req() req: Request) {
+    const data = await this.svc.create(dto);
+
+    await this.journal.log({
+      userId: (req as any).user?.id,
+      userName: (req as any).user?.username || (req as any).user?.email,
+      action: 'create',
+      entity: 'TableApplication',
+      entityId: String(data?.id ?? ''),
+      description: 'Создана строка Приложения №3',
+      route: req.originalUrl,
+      method: req.method,
+      ip: (req.headers['x-forwarded-for'] as string) ?? req.ip,
+      success: true,
+    });
+
+    return data;
   }
 
-  @Get()
-  findAll() {
-    return this.tableApplicationsService.findAll();
+  @Patch(':id')
+  async update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() dto: UpdateTableApplicationDto,
+    @Req() req: Request,
+  ) {
+    const data = await this.svc.update(id, dto);
+
+    await this.journal.log({
+      userId: (req as any).user?.id,
+      userName: (req as any).user?.username || (req as any).user?.email,
+      action: 'update',
+      entity: 'TableApplication',
+      entityId: String(id),
+      description: 'Обновлена строка Приложения №3',
+      route: req.originalUrl,
+      method: req.method,
+      ip: (req.headers['x-forwarded-for'] as string) ?? req.ip,
+      success: true,
+    });
+
+    return data;
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: any) {
-    return this.tableApplicationsService.findOne(+id);
+  @Post('upsert')
+  async upsert(@Body() dto: UpsertAppendix3Dto, @Req() req: Request) {
+    const data = await this.svc.upsertApp3(dto);
+
+    await this.journal.log({
+      userId: (req as any).user?.id,
+      userName: (req as any).user?.username || (req as any).user?.email,
+      action: 'upsert',
+      entity: 'Application3',
+      entityId: String(data?.linkId ?? ''),
+      description: 'Идемпотентное обновление/создание Приложения №3',
+      route: req.originalUrl,
+      method: req.method,
+      ip: (req.headers['x-forwarded-for'] as string) ?? req.ip,
+      success: true,
+      meta: data?.data?.updated,
+    });
+
+    return data;
   }
 
-  @Patch()
-  update(@Body() updateTableApplicationDto: any) {
-    console.log('updateTableApplicationDto', updateTableApplicationDto);
-    return this.tableApplicationsService.update(updateTableApplicationDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.tableApplicationsService.remove(+id);
+  @Get('by-zapiska/:id')
+  getByZapiska(@Param('id', ParseIntPipe) id: number) {
+    return this.svc.getByZapiska(id);
   }
 }

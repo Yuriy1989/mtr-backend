@@ -1,6 +1,12 @@
-import { Order } from 'src/orders/entities/order.entity';
 import { User } from 'src/users/entities/user.entity';
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
 @Entity('regions')
 export class Region {
@@ -10,9 +16,18 @@ export class Region {
   @Column()
   nameRegion: string;
 
-  @OneToMany(() => User, (user) => user.region)
+  @Column('text', { array: true, nullable: false, default: '{}' })
+  codeRegion: string[];
+
+  @OneToMany(() => User, (user) => user.region, {
+    nullable: true,
+    onDelete: 'SET NULL',
+  })
   users: User[];
 
-  @OneToMany(() => Order, (order) => order.region)
-  orders: Order[];
+  @CreateDateColumn({ name: 'created_at', type: 'timestamptz' })
+  createdAt: Date;
+
+  @UpdateDateColumn({ name: 'updated_at', type: 'timestamptz' })
+  updatedAt: Date;
 }

@@ -32,7 +32,9 @@
         "signin",
         "storag",
         "Toket",
-        "typeorm"
+        "typeorm",
+        "zapiska",
+        "Zapiski"
     ],
     "CodeGPT.apiKey": "CodeGPT Plus Beta"
 }

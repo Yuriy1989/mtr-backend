@@ -7,18 +7,15 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   ManyToOne,
+  JoinColumn,
+  Unique,
 } from 'typeorm';
 
-@Entity('mtrList') // Исправлено название таблицы
+@Entity('mtrList')
+@Unique(['zapiska', 'vl06'])
 export class MtrList {
   @PrimaryGeneratedColumn()
   id: number;
-
-  @Column()
-  amount: number;
-
-  @Column({ nullable: true }) // Добавлено, если может быть null
-  region: string;
 
   @Column({ nullable: true }) // Добавлено, если может быть null
   express: string;
@@ -26,13 +23,13 @@ export class MtrList {
   @Column({ nullable: true }) // Добавлено, если может быть null
   note: string;
 
-  // @ManyToOne(() => Vl06, (vl06) => vl06.mtrList, { onDelete: 'CASCADE' }) // Добавлено удаление каскадом
-  // vl06: Vl06;
+  @ManyToOne(() => Zapiski, (z) => z.mtrList, { onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'zapiskiId' })
+  zapiska: Zapiski;
 
-  // @ManyToOne(() => Zapiski, (zapiski) => zapiski.mtrList, {
-  //   onDelete: 'CASCADE',
-  // }) // Добавлено удаление каскадом
-  // zapiski: Zapiski;
+  @ManyToOne(() => Vl06, (z) => z.mtrList, { onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'vl06' })
+  vl06: Vl06;
 
   @CreateDateColumn()
   createdAt: Date;

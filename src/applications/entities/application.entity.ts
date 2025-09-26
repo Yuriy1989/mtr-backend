@@ -1,8 +1,10 @@
-import { IsEmpty, IsNotEmpty } from 'class-validator';
-import { Order } from 'src/orders/entities/order.entity';
+import { IsEmpty } from 'class-validator';
 import { TableApplication } from 'src/table-applications/entities/table-application.entity';
 import { User } from 'src/users/entities/user.entity';
+import { Zapiski } from 'src/zapiski/entities/zapiski.entity';
+
 import {
+  Column,
   CreateDateColumn,
   Entity,
   JoinColumn,
@@ -10,24 +12,33 @@ import {
   OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
+  Unique,
   UpdateDateColumn,
 } from 'typeorm';
 
-@Entity('applications')
+@Entity('application')
+@Unique(['zapiska'])
 export class Application {
   @PrimaryGeneratedColumn()
   id: number;
 
-  //   @OneToOne(() => Order, (order) => order.id)
-  //   order: Order;
+  // --- связи со служебной запиской ---
+  @OneToOne(() => Zapiski, { eager: true })
+  @JoinColumn({ name: 'zapiskaId' })
+  zapiska: Zapiski;
 
-  @OneToOne(() => Order)
-  @JoinColumn()
-  order: Order;
+  // --- связи со строками Приложения ---
+  @OneToMany(() => TableApplication, (h) => h.listApp, { cascade: true })
+  tableApp: TableApplication[];
 
-  @IsNotEmpty()
-  @ManyToOne(() => User, (user) => user.applications)
-  user: User;
+  @ManyToOne(() => User, (user) => user.application, { onDelete: 'CASCADE' })
+  user: User | null;
+
+  @Column({ nullable: true })
+  status: number;
+
+  @Column({ type: 'boolean', default: false })
+  sendLock: boolean;
 
   @IsEmpty()
   @CreateDateColumn()
@@ -36,10 +47,4 @@ export class Application {
   @IsEmpty()
   @UpdateDateColumn()
   updatedAt: Date;
-
-  @OneToMany(
-    () => TableApplication,
-    (tableApplication) => tableApplication.application,
-  )
-  tableApplication: TableApplication;
 }

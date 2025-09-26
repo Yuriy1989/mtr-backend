@@ -1,8 +1,18 @@
-import { Controller, Get, Post, Body, Patch, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Delete,
+  UseGuards,
+} from '@nestjs/common';
 import { DimensionsService } from './dimensions.service';
 import { CreateDimensionDto } from './dto/create-dimension.dto';
 import { UpdateDimensionDto } from './dto/update-dimension.dto';
+import { JwtGuard } from 'src/auth/guard/jwtAuth.guard';
 
+@UseGuards(JwtGuard)
 @Controller('dimensions')
 export class DimensionsController {
   constructor(private readonly dimensionsService: DimensionsService) {}

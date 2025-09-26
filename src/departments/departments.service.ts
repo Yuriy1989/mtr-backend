@@ -1,9 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { CreateDepartmentDto } from './dto/create-department.dto';
 import { UpdateDepartmentDto } from './dto/update-department.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Department } from './entities/department.entity';
-import { Repository } from 'typeorm';
+import { Repository, QueryFailedError } from 'typeorm';
 
 @Injectable()
 export class DepartmentsService {
@@ -34,6 +34,25 @@ export class DepartmentsService {
   }
 
   async remove(id: number) {
-    return await this.departmentRepository.delete(id);
+    try {
+      return await this.departmentRepository.delete(id);
+    } catch (e) {
+      // Нарушение внешнего ключа
+      if (e instanceof QueryFailedError) {
+        const code = (e as any)?.driverError?.code;
+        if (
+          code === '23503' ||
+          code === 'ER_ROW_IS_REFERENCED_2' ||
+          (e as any)?.errno === 1451
+        ) {
+          throw new ConflictException({
+            message: 'Нельзя удалить отдел: есть связанные пользователи.',
+            code,
+            details: (e as any)?.driverError?.constraint,
+          });
+        }
+      }
+      throw e;
+    }
   }
 }

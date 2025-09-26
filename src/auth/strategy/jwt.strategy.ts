@@ -19,13 +19,15 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
     });
   }
 
-  validate(jwtPayload: { sub: number }) {
-    const user = this.usersService.findById(jwtPayload.sub);
+  async validate(jwtPayload: { sub: number; username?: string }) {
+    const user = await this.usersService.findById(jwtPayload.sub);
 
     if (!user) {
       throw new UnauthorizedException('Неверный токен пользователя');
     }
 
-    return user;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { password, ...userWithoutPassword } = user;
+    return userWithoutPassword;
   }
 }

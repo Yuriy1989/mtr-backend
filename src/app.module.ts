@@ -13,15 +13,13 @@ import { DeliveriesModule } from './deliveries/deliveries.module';
 import configuration from './config/configuration';
 import { AppServices } from './config/appService';
 import { AuthModule } from './auth/auth.module';
-import { OrdersModule } from './orders/orders.module';
-import { TableOrderModule } from './table-order/table-order.module';
-import { ApplicationsModule } from './applications/applications.module';
 import { TableApplicationsModule } from './table-applications/table-applications.module';
 import { ZapiskiModule } from './zapiski/zapiski.module';
 import { Vl06Module } from './vl06/vl06.module';
 import { MtrListModule } from './mtr-list/mtr-list.module';
-import { LinkVl06ZapiskiModule } from './link-vl06-zapiski/link-vl06-zapiski.module';
-import { LinkVl06MtrListModule } from './link-vl06-mtr-list/link-vl06-mtr-list.module';
+import { ApplicationsModule } from './applications/applications.module';
+import { TransportsModule } from './transports/transports.module';
+import { JournalModule } from './journal/journal.module';
 
 @Module({
   imports: [
@@ -41,15 +39,13 @@ import { LinkVl06MtrListModule } from './link-vl06-mtr-list/link-vl06-mtr-list.m
     ActivitiesModule,
     DeliveriesModule,
     AuthModule,
-    OrdersModule,
-    TableOrderModule,
-    ApplicationsModule,
     TableApplicationsModule,
     ZapiskiModule,
     Vl06Module,
     MtrListModule,
-    LinkVl06ZapiskiModule,
-    LinkVl06MtrListModule,
+    ApplicationsModule,
+    TransportsModule,
+    JournalModule,
   ],
   controllers: [AppController],
   providers: [],
