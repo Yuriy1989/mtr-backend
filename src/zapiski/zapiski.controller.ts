@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   UseGuards,
+  Query,
 } from '@nestjs/common';
 import { ZapiskiService } from './zapiski.service';
 import { UpdateZapiskiDto } from './dto/update-zapiski.dto';
@@ -27,14 +28,20 @@ export class ZapiskiController {
   }
 
   @Get()
-  async findAll() {
-    const data = await this.zapiskiService.findAll();
+  async findAll(@Query('from') from?: string, @Query('to') to?: string) {
+    const data = await this.zapiskiService.findAll({ from, to });
     return { success: true, data };
   }
 
   @Get(':id')
   async findOne(@Param('id') id: number) {
     const data = await this.zapiskiService.findOne(+id);
+    return { success: true, data };
+  }
+
+  @Get(':id/stats')
+  async stats(@Param('id') id: number) {
+    const data = await this.zapiskiService.getStatsForZapiska(+id);
     return { success: true, data };
   }
 

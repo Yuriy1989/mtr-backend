@@ -17,11 +17,15 @@ export class MtrList {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ nullable: true }) // Добавлено, если может быть null
+  @Column({ nullable: true })
   express: string;
 
-  @Column({ nullable: true }) // Добавлено, если может быть null
+  @Column({ nullable: true })
   note: string;
+
+  // NEW: Наименование объекта ремонта
+  @Column({ nullable: true })
+  repairObjectName: string;
 
   @ManyToOne(() => Zapiski, (z) => z.mtrList, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'zapiskiId' })

@@ -1,8 +1,12 @@
-import { PartialType } from '@nestjs/mapped-types';
-import { CreateDimensionDto } from './create-dimension.dto';
-import { IsInt } from 'class-validator';
+// src/dimensions/dto/update-dimension.dto.ts
+import { IsArray, IsBoolean, IsOptional, IsString } from 'class-validator';
 
-export class UpdateDimensionDto extends PartialType(CreateDimensionDto) {
-  @IsInt()
-  id: number;
+export class UpdateDimensionDto {
+  // ВНИМАНИЕ: поля id здесь больше нет
+  @IsOptional() @IsString() nameDimension?: string;
+  @IsOptional() @IsString() code?: string;
+  @IsOptional() @IsString() category?: string;
+  @IsOptional() @IsBoolean() isBase?: boolean;
+  @IsOptional() toBaseFactor?: number | string | null;
+  @IsOptional() @IsArray() aliases?: string[]; // строки проверим в сервисе
 }

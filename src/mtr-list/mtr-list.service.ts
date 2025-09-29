@@ -54,26 +54,34 @@ export class MtrListService {
   }
 
   async update(id: number, body: any) {
+    // ожидаем { vl06Id, data }, где data может включать repairObjectName
     const res = await this.mtrList.update(body.vl06Id, body.data);
     if (!res.affected)
       throw new NotFoundException(`MtrList ${body.vl06Id} not found`);
     return res;
   }
 
-  // mtr-list.service.ts
+  async remove(id: number) {
+    const res = await this.mtrList.delete({ id });
+    if (!res.affected) {
+      throw new NotFoundException(`MtrList ${id} not found`);
+    }
+    return { success: true, id };
+  }
+
   async syncForZapiska(
     zapiskaId: number,
     items: Array<{
       vl06Id: number;
       express?: string;
       note?: string;
+      repairObjectName?: string; // NEW
     }>,
   ) {
     return this.dataSource.transaction(async (manager) => {
       const repo = manager.getRepository(MtrList);
       const vl06Repo = manager.getRepository(Vl06);
 
-      // 1) Текущие строки
       const existing = await repo.find({
         where: { zapiska: { id: zapiskaId } },
         relations: ['vl06'],
@@ -81,31 +89,27 @@ export class MtrListService {
       });
 
       const existingByVl06 = new Map<number, number>();
-      for (const row of existing) {
-        existingByVl06.set(row.vl06.id, row.id);
-      }
+      for (const row of existing) existingByVl06.set(row.vl06.id, row.id);
 
       const incomingVl06Ids = new Set(items.map((i) => i.vl06Id));
 
-      // 2) Готовим вставку/обновление
       const toSave: MtrList[] = items.map((i) => {
         const m = new MtrList();
         const existingId = existingByVl06.get(i.vl06Id);
-        if (existingId) m.id = existingId; // update
+        if (existingId) m.id = existingId;
         m.express = i.express ?? null;
         m.note = i.note ?? null;
+        m.repairObjectName = i.repairObjectName ?? null; // NEW
         (m as any).zapiska = { id: zapiskaId };
         (m as any).vl06 = { id: i.vl06Id };
         return m;
       });
 
-      // 3) Определяем, какие vl06 удаляются
       const removedVl06Ids = existing
         .map((row) => row.vl06.id)
         .filter((id) => !incomingVl06Ids.has(id));
 
       if (removedVl06Ids.length) {
-        // 3.1) Ставим статус=10 в tableVL06
         await vl06Repo
           .createQueryBuilder()
           .update(Vl06)
@@ -113,7 +117,6 @@ export class MtrListService {
           .whereInIds(removedVl06Ids)
           .execute();
 
-        // 3.2) Удаляем строки из mtrList
         await repo
           .createQueryBuilder()
           .delete()
@@ -122,7 +125,6 @@ export class MtrListService {
           .execute();
       }
 
-      // 4) Save (insert/update)
       const saved = await repo.save(toSave);
 
       return {
@@ -130,9 +132,5 @@ export class MtrListService {
         removedCount: removedVl06Ids.length,
       };
     });
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} mtrList`;
   }
 }

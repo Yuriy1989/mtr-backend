@@ -20,6 +20,8 @@ import { MtrListModule } from './mtr-list/mtr-list.module';
 import { ApplicationsModule } from './applications/applications.module';
 import { TransportsModule } from './transports/transports.module';
 import { JournalModule } from './journal/journal.module';
+import { LastmileModule } from './lastmile/lastmile.module';
+import { BasicunitModule } from './basicunit/basicunit.module';
 
 @Module({
   imports: [
@@ -46,6 +48,8 @@ import { JournalModule } from './journal/journal.module';
     ApplicationsModule,
     TransportsModule,
     JournalModule,
+    LastmileModule,
+    BasicunitModule,
   ],
   controllers: [AppController],
   providers: [],

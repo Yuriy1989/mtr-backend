@@ -7,7 +7,9 @@ import { Vl06 } from 'src/vl06/entities/vl06.entity';
 import { MtrList } from 'src/mtr-list/entities/mtr-list.entity';
 import { Application } from 'src/applications/entities/application.entity';
 import { TableApplication } from 'src/table-applications/entities/table-application.entity';
+import { DimensionCategory } from 'src/dimensions/entities/dimension-category.entity';
 import { TransportsService } from 'src/transports/transports.service';
+import { Dimension } from 'src/dimensions/entities/dimension.entity';
 
 @Injectable()
 export class ZapiskiService {
@@ -36,13 +38,23 @@ export class ZapiskiService {
     return data;
   }
 
-  async findAll() {
-    const list = await this.tableZapiskiRepository
+  async findAll(range?: { from?: string; to?: string }) {
+    const qb = this.tableZapiskiRepository
       .createQueryBuilder('z')
       .leftJoinAndSelect('z.user', 'user')
       .loadRelationCountAndMap('z.mtrCount', 'z.mtrList')
-      .orderBy('z.createdAt', 'DESC')
-      .getMany();
+      .orderBy('z.createdAt', 'DESC');
+
+    if (range?.from) {
+      const from = new Date(range.from);
+      if (!isNaN(from.getTime())) qb.andWhere('z.createdAt >= :from', { from });
+    }
+    if (range?.to) {
+      const to = new Date(range.to);
+      if (!isNaN(to.getTime())) qb.andWhere('z.createdAt <= :to', { to });
+    }
+
+    const list = await qb.getMany();
     return list;
   }
 
@@ -232,6 +244,92 @@ export class ZapiskiService {
 
       return { id, updatedVl06: allVl06.length, status: appStatus };
     });
+  }
+
+  async getStatsForZapiska(id: number) {
+    // забираем все mtrList + vl06
+    const rows = await this.tableZapiskiRepository.manager
+      .getRepository(MtrList)
+      .find({ where: { zapiska: { id } as any }, relations: { vl06: true } });
+    // подтянем человекочитаемые имена категорий
+    const catList = await this.tableZapiskiRepository.manager
+      .getRepository(DimensionCategory)
+      .find();
+    const catNameByKey = new Map(
+      catList.map((c) => [c.key, c.nameRu || c.key]),
+    );
+
+    const dimRepo =
+      this.tableZapiskiRepository.manager.getRepository(Dimension);
+
+    const dims = await dimRepo.find({ relations: { aliases: true } });
+
+    const byUnit = new Map<string, number>(); // как указано
+    const byCategory = new Map<
+      string,
+      { total: number; baseUnit?: string | null }
+    >();
+
+    const lower = (s: any) => (s == null ? '' : String(s).trim().toLowerCase());
+
+    // быстрые карты
+    const byCode = new Map<string, Dimension>();
+    const byAlias = new Map<string, Dimension>();
+    for (const d of dims) {
+      if (d.code) byCode.set(lower(d.code), d);
+      for (const a of d.aliases || []) {
+        if (a?.text) byAlias.set(lower(a.text), d);
+      }
+      // nameDimension тоже как алиас
+      if (d.nameDimension) byAlias.set(lower(d.nameDimension), d);
+    }
+
+    function resolveDimension(raw: string): Dimension | null {
+      const s = lower(raw);
+      if (byCode.has(s)) return byCode.get(s)!;
+      if (byAlias.has(s)) return byAlias.get(s)!;
+      return null;
+    }
+
+    for (const r of rows) {
+      const v = r.vl06;
+      const unitRaw = v?.basic;
+      const qty = typeof v?.supplyVolume === 'number' ? v!.supplyVolume : 0;
+
+      // как указано
+      const key = unitRaw || '—';
+      byUnit.set(key, (byUnit.get(key) || 0) + qty);
+
+      // нормализация
+      const dim = resolveDimension(unitRaw);
+      if (dim?.category) {
+        const toBase = dim.isBase ? qty : qty * Number(dim.toBaseFactor || 1);
+        const prev = byCategory.get(dim.category) || {
+          total: 0,
+          baseUnit: null,
+        };
+        byCategory.set(dim.category, {
+          total: prev.total + toBase,
+          baseUnit: prev.baseUnit || (dim.isBase ? dim.code : prev.baseUnit),
+        });
+      }
+    }
+
+    const toObject = (m: Map<any, any>) => {
+      const o: any = {};
+      for (const [k, v] of m.entries()) o[k] = v;
+      return o;
+    };
+
+    return {
+      byUnit: toObject(byUnit),
+      byCategory: Object.fromEntries(
+        Object.entries(toObject(byCategory)).map(([catKey, val]: any) => [
+          catKey,
+          { ...val, categoryName: catNameByKey.get(catKey) || catKey },
+        ]),
+      ),
+    };
   }
 
   // Историческая ручка /:id/send50 — теперь проксируем на новую логику
