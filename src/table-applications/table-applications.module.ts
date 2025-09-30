@@ -8,6 +8,7 @@ import { Application } from '../applications/entities/application.entity';
 import { Vl06 } from 'src/vl06/entities/vl06.entity';
 import { MtrList } from 'src/mtr-list/entities/mtr-list.entity';
 import { JournalModule } from 'src/journal/journal.module';
+import { TableApplicationHistory } from './entities/table-application-history.entity';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { JournalModule } from 'src/journal/journal.module';
       Application,
       Vl06,
       MtrList,
+      TableApplicationHistory,
     ]),
     JournalModule,
   ],

@@ -95,4 +95,11 @@ export class TableApplicationsController {
   getByZapiska(@Param('id', ParseIntPipe) id: number) {
     return this.svc.getByZapiska(id);
   }
+
+  // NEW: история изменений одной строки приложения
+  @Get(':rowId/history')
+  async getHistory(@Param('rowId', ParseIntPipe) rowId: number) {
+    const list = await this.svc.getRowHistory(rowId);
+    return { success: true, data: list };
+  }
 }

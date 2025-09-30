@@ -13,6 +13,7 @@ import { Application } from 'src/applications/entities/application.entity';
 import { Zapiski } from 'src/zapiski/entities/zapiski.entity';
 import { Vl06 } from 'src/vl06/entities/vl06.entity';
 import { MtrList } from 'src/mtr-list/entities/mtr-list.entity';
+import { TableApplicationHistory } from './entities/table-application-history.entity';
 
 @Injectable()
 export class TableApplicationsService {
@@ -27,6 +28,8 @@ export class TableApplicationsService {
     private readonly vl06Repo: Repository<Vl06>,
     @InjectRepository(MtrList)
     private readonly mtrRepo: Repository<MtrList>,
+    @InjectRepository(TableApplicationHistory)
+    private readonly historyRepo: Repository<TableApplicationHistory>,
   ) {}
 
   async create(dto: CreateTableApplicationDto) {
@@ -37,6 +40,34 @@ export class TableApplicationsService {
   async update(id: number, dto: UpdateTableApplicationDto) {
     const app = await this.appRowRepo.findOne({ where: { id } });
     if (!app) throw new NotFoundException('TableApplication not found');
+
+    // Сохраняем историю, если есть изменения значимых полей
+    const snapshotFields: (keyof TableApplication)[] = [
+      'dateRequest',
+      'dateShipment',
+      'format',
+      'transportNumber',
+      'discarded',
+      'remainder',
+      'transit',
+      'numberM11',
+      'dateM11',
+      'addNote',
+    ];
+    const changed = snapshotFields.some(
+      (k) => (app as any)[k] !== (dto as any)[k],
+    );
+    if (changed) {
+      const snap: any = {};
+      snapshotFields.forEach((k) => (snap[k] = (app as any)[k] ?? null));
+      await this.historyRepo.save(
+        this.historyRepo.create({
+          tableApplication: app,
+          snapshot: snap,
+        }),
+      );
+    }
+
     Object.assign(app, dto);
     return this.appRowRepo.save(app);
   }
@@ -56,6 +87,7 @@ export class TableApplicationsService {
       const appRowRepo = manager.getRepository(TableApplication);
       const mtrRepo = manager.getRepository(MtrList);
       const vl06Repo = manager.getRepository(Vl06);
+      const historyRepo = manager.getRepository(TableApplicationHistory);
 
       const zap = await zapRepo.findOne({ where: { id: zapiskaId } });
       if (!zap) throw new NotFoundException(`Записка ${zapiskaId} не найдена`);
@@ -82,15 +114,14 @@ export class TableApplicationsService {
         const mid = Number(it.mtrListId);
         if (!Number.isFinite(mid) || mid <= 0) continue;
 
-        // СТАЛО
         const mtr = await mtrRepo.findOne({
           where: { id: mid },
           relations: { vl06: true },
         });
         if (!mtr) continue;
 
-        // Если позиция уже полностью отгружена — не позволяем её редактировать вообще
         if (mtr.vl06?.status === 50) {
+          // Полностью отправленная позиция — не трогаем
           continue;
         }
 
@@ -126,6 +157,32 @@ export class TableApplicationsService {
         if (!row) {
           row = appRowRepo.create(patch);
         } else {
+          // Снимок истории перед изменением
+          const snapshotFields: (keyof TableApplication)[] = [
+            'dateRequest',
+            'dateShipment',
+            'format',
+            'transportNumber',
+            'discarded',
+            'remainder',
+            'transit',
+            'numberM11',
+            'dateM11',
+            'addNote',
+          ];
+          const changed = snapshotFields.some(
+            (k) => (row as any)[k] !== (patch as any)[k],
+          );
+          if (changed) {
+            const snap: any = {};
+            snapshotFields.forEach((k) => (snap[k] = (row as any)[k] ?? null));
+            await historyRepo.save(
+              historyRepo.create({
+                tableApplication: row,
+                snapshot: snap,
+              }),
+            );
+          }
           Object.assign(row, patch);
         }
         await appRowRepo.save(row);
@@ -162,9 +219,6 @@ export class TableApplicationsService {
     });
   }
 
-  /**
-   * Вернуть приложение по id служебки
-   */
   async getByZapiska(zapiskaId: number) {
     const zap = await this.zapRepo.findOne({ where: { id: zapiskaId } });
     if (!zap) throw new NotFoundException('Записка не найдена');
@@ -176,10 +230,21 @@ export class TableApplicationsService {
 
     const rows = await this.appRowRepo.find({
       where: { listApp: { id: app.id } },
-      relations: { mtrList: { vl06: true } }, // ← подтягиваем vl06
+      relations: { mtrList: { vl06: true } },
       order: { id: 'ASC' },
     });
 
     return { success: true, data: { application: app, rows } };
+  }
+
+  // NEW: история одной строки
+  async getRowHistory(rowId: number) {
+    const row = await this.appRowRepo.findOne({ where: { id: rowId } });
+    if (!row) throw new NotFoundException('TableApplication row not found');
+
+    return this.historyRepo.find({
+      where: { tableApplication: { id: rowId } as any },
+      order: { id: 'DESC' },
+    });
   }
 }
