@@ -13,18 +13,29 @@ import { TableApplication } from 'src/table-applications/entities/table-applicat
 import { MtrList } from 'src/mtr-list/entities/mtr-list.entity';
 import { Vl06 } from 'src/vl06/entities/vl06.entity';
 import { Transport } from 'src/transports/entities/transport.entity';
+import { LastmileDecision } from '../lastmile/entities/lastmile.entity';
 
 @Injectable()
 export class ApplicationsService {
   constructor(
     @InjectRepository(Application)
     private readonly appRepo: Repository<Application>,
-    @InjectRepository(Zapiski) private readonly zapRepo: Repository<Zapiski>,
+
+    @InjectRepository(Zapiski)
+    private readonly zapRepo: Repository<Zapiski>,
+
     @InjectRepository(TableApplication)
     private readonly appRowRepo: Repository<TableApplication>,
-    @InjectRepository(MtrList) private readonly mtrRepo: Repository<MtrList>,
+
+    @InjectRepository(MtrList)
+    private readonly mtrRepo: Repository<MtrList>,
+
     @InjectRepository(Transport)
     private readonly transportRepo: Repository<Transport>,
+
+    // ← шестой параметр — именно он и должен резолвиться
+    @InjectRepository(LastmileDecision)
+    private readonly decRepo: Repository<LastmileDecision>,
   ) {}
 
   async create(dto: CreateApplicationDto): Promise<Application> {
@@ -137,6 +148,15 @@ export class ApplicationsService {
         order: { id: 'DESC' },
       });
 
+      // причины отказа на последней миле (если есть непринятые позиции)
+      const decs = await this.decRepo.find({
+        where: { application: { id: a.id }, accepted: false } as any,
+        select: { reason: true }, // тянем только reason
+      });
+      const lastmileReasons = (decs || [])
+        .map((d) => (d?.reason || '').trim())
+        .filter(Boolean);
+
       result.push({
         application: {
           id: a.id,
@@ -161,7 +181,7 @@ export class ApplicationsService {
             }
           : null,
         rowsCount,
-        remainderCount, // ← добавлено
+        remainderCount,
         storages,
         transport: lastTransport
           ? {
@@ -171,7 +191,11 @@ export class ApplicationsService {
               wave: lastTransport.wave ?? null,
             }
           : null,
-        waves, // ← добавлено
+        waves,
+        lastmile: {
+          hasRejected: lastmileReasons.length > 0,
+          reasons: lastmileReasons,
+        },
       });
     }
 

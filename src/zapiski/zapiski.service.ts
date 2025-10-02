@@ -296,11 +296,9 @@ export class ZapiskiService {
       const unitRaw = v?.basic;
       const qty = typeof v?.supplyVolume === 'number' ? v!.supplyVolume : 0;
 
-      // как указано
       const key = unitRaw || '—';
       byUnit.set(key, (byUnit.get(key) || 0) + qty);
 
-      // нормализация
       const dim = resolveDimension(unitRaw);
       if (dim?.category) {
         const toBase = dim.isBase ? qty : qty * Number(dim.toBaseFactor || 1);

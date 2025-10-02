@@ -8,6 +8,7 @@ import { TableApplication } from 'src/table-applications/entities/table-applicat
 import { MtrList } from 'src/mtr-list/entities/mtr-list.entity';
 import { Transport } from 'src/transports/entities/transport.entity';
 import { JournalModule } from 'src/journal/journal.module';
+import { LastmileDecision } from 'src/lastmile/entities/lastmile.entity';
 
 @Module({
   imports: [
@@ -17,10 +18,12 @@ import { JournalModule } from 'src/journal/journal.module';
       TableApplication,
       MtrList,
       Transport,
+      LastmileDecision,
     ]),
     JournalModule,
   ],
   controllers: [ApplicationsController],
   providers: [ApplicationsService],
+  exports: [ApplicationsService],
 })
 export class ApplicationsModule {}

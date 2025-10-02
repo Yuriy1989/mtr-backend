@@ -8,8 +8,6 @@ import { FilialsModule } from './filials/filials.module';
 import { DepartmentsModule } from './departments/departments.module';
 import { DimensionsModule } from './dimensions/dimensions.module';
 import { RegionsModule } from './regions/regions.module';
-import { ActivitiesModule } from './activities/activities.module';
-import { DeliveriesModule } from './deliveries/deliveries.module';
 import configuration from './config/configuration';
 import { AppServices } from './config/appService';
 import { AuthModule } from './auth/auth.module';
@@ -38,8 +36,6 @@ import { BasicunitModule } from './basicunit/basicunit.module';
     DepartmentsModule,
     DimensionsModule,
     RegionsModule,
-    ActivitiesModule,
-    DeliveriesModule,
     AuthModule,
     TableApplicationsModule,
     ZapiskiModule,
